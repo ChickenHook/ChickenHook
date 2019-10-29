@@ -9,9 +9,11 @@ Supported platforms: x86, arm64
 
     
     static ChickenHook chickenHook;
+    
 
 2. Init chickenhook (only once!)
 
+    
     
     chickenHook.init();
     
@@ -45,7 +47,7 @@ example here shows a hook function for libc's open
 
     
     chickenHook.inject((void *) &open, (void *) &my_open);
-
+    
 
 ## Build
 
