@@ -1,0 +1,3 @@
+/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a/CMakeFiles/native-lib.dir

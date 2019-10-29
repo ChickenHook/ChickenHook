@@ -1,0 +1,66 @@
+{
+    "obfuscator" : {
+        "global" : {
+            "enableObfuscate" : true,
+            "evidenceFunction" : "com.example.TestClass.evidenceFunction",
+            "logLevel" : 2,
+            "logPath" : "./obfuscation.log",
+            "obfuscateApiCallsToPackages" : [
+                "android.app*",
+                "android.widget*",
+                "java.lang**",
+                "java.io**",
+                "java.security**"
+            ]
+        },
+        "passes" : {
+            "ordered" : [
+                {
+                    "enabled" : true,
+                    "excludes" : [
+                        "com.test.TestClass.testFunct*",
+                        "com.test.Test*"
+                    ],
+                    "level" : 10,
+                    "name" : "AntiDebugging"
+                },
+                {
+                    "enabled" : true,
+                    "excludes" : [
+                        "com.test.TestClass.testFunct*",
+                        "com.test.Test*"
+                    ],
+                    "level" : 10,
+                    "name" : "ApiFunctionInvocationObfuscator"
+                },
+                {
+                    "enabled" : true,
+                    "excludes" : [
+                        "com.test.TestClass.testFunct*",
+                        "com.test.Test*"
+                    ],
+                    "level" : 10,
+                    "name" : "CallGraphObfuscator"
+                },
+                {
+                    "enabled" : true,
+                    "excludes" : [
+                        "com.test.TestClass.testFunct*",
+                        "com.test.Test*"
+                    ],
+                    "level" : 10,
+                    "name" : "ControlFlowObfuscator"
+                },
+                {
+                    "enabled" : true,
+                    "excludes" : [
+                        "com.test.TestClass.testFunct*",
+                        "com.test.Test*"
+                    ],
+                    "level" : 10,
+                    "name" : "StringObfuscator"
+                }
+            ]
+        }
+    }
+}

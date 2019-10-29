@@ -1,0 +1,62 @@
+{
+  "stringTable": {
+    "0": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a",
+    "1": "--target=armv7-none-linux-androideabi19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot -Dnative_lib_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -fno-addrsig -march=armv7-a -mthumb -Wa,--noexecstack -Wformat -Werror=format-security -std=c++14 -Oz -DNDEBUG -fPIC"
+  },
+  "buildFiles": [
+    "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/build/cmake/android.toolchain.cmake",
+    "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/build/cmake/platforms.cmake",
+    "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "/home/sascharoth/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a\" clean"
+  ],
+  "buildTargetsCommand": "/home/sascharoth/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "native-lib-Release-armeabi-v7a": {
+      "buildCommand": "/home/sascharoth/Android/Sdk/cmake/3.10.2.4988404/bin/ninja -C \"/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/release/armeabi-v7a\" native-lib",
+      "buildType": "release",
+      "toolchain": "649491482",
+      "abi": "armeabi-v7a",
+      "artifactName": "native-lib",
+      "files": [
+        {
+          "src": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/native-lib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/MapsParser/MapsParser.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/JniAddressFinder/JniAddressFinder.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/injector.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/trampoline.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/home/sascharoth/Development/git/VmCracker/app/build/intermediates/cmake/release/obj/armeabi-v7a/libnative-lib.so"
+    }
+  },
+  "toolchains": {
+    "649491482": {
+      "cppCompilerExecutable": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

@@ -1,0 +1,31 @@
+[
+{
+  "directory": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86",
+  "command": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/native-lib.cpp.o -c /home/sascharoth/Development/git/VmCracker/app/src/main/cpp/native-lib.cpp",
+  "file": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/native-lib.cpp"
+},
+
+{
+  "directory": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86",
+  "command": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/MapsParser/MapsParser.cpp.o -c /home/sascharoth/Development/git/VmCracker/app/src/main/cpp/MapsParser/MapsParser.cpp",
+  "file": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/MapsParser/MapsParser.cpp"
+},
+
+{
+  "directory": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86",
+  "command": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/JniAddressFinder/JniAddressFinder.cpp.o -c /home/sascharoth/Development/git/VmCracker/app/src/main/cpp/JniAddressFinder/JniAddressFinder.cpp",
+  "file": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/JniAddressFinder/JniAddressFinder.cpp"
+},
+
+{
+  "directory": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86",
+  "command": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/hooker/injector.cpp.o -c /home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/injector.cpp",
+  "file": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/injector.cpp"
+},
+
+{
+  "directory": "/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86",
+  "command": "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC   -o CMakeFiles/native-lib.dir/hooker/trampoline.cpp.o -c /home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/trampoline.cpp",
+  "file": "/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/hooker/trampoline.cpp"
+}
+]
