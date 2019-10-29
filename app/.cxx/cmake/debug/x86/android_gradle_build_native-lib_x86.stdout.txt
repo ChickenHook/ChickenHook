@@ -1,7 +1,0 @@
-ninja: Entering directory `/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/x86'
-[1/2] Building CXX object CMakeFiles/native-lib.dir/native-lib.cpp.o
-/home/sascharoth/Development/git/VmCracker/app/src/main/cpp/native-lib.cpp:224:5: warning: '/*' within block comment [-Wcomment]
-    /*jniAddressFinder.getAddressOfJavaFunction("addressOf","This is a teststring");*/
-    ^
-1 warning generated.
-[2/2] Linking CXX shared library /home/sascharoth/Development/git/VmCracker/app/build/intermediates/cmake/debug/obj/x86/libnative-lib.so
