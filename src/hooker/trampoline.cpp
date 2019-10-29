@@ -2,7 +2,7 @@
 // Created by sascharoth on 25.10.19.
 //
 
-#include "trampoline.h"
+#include "chickenHook/trampoline.h"
 #include <stdio.h>
 #include <bits/sysconf.h>
 #include <sys/mman.h>

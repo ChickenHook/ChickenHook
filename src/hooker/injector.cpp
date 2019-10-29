@@ -5,8 +5,8 @@
 #include <android/log.h>
 #include <ucontext.h>
 #include <setjmp.h>
-#include "injector.h"
-#include "trampoline.h"
+#include "chickenHook/injector.h"
+#include "chickenHook/trampoline.h"
 
 static std::vector<Trampoline> trampolines;
 

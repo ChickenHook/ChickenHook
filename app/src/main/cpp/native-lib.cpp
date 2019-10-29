@@ -3,8 +3,7 @@
 #include <android/log.h>
 #include <dlfcn.h>
 #include <vector>
-#include "JniAddressFinder/JniAddressFinder.h"
-#include "hooker/injector.h"
+#include "chickenHook/injector.h"
 #include <fcntl.h>
 #include <iomanip>
 #include <sstream>
