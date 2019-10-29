@@ -19,7 +19,7 @@ uint8_t bytes[] = {
         0xec, 0x30, 0xe8
 };
 
-static Injector injector;
+static ChickenHook chickenHook;
 static void *sha256Addr;
 
 # define SHA256_DIGEST_LENGTH    32
@@ -32,7 +32,7 @@ void doIt() {
 void myDoIt() {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "hooked function called myDoIt");
     Trampoline trampoline;
-    if (injector.getTrampolineByAddr((void *) &doIt, trampoline)) {
+    if (chickenHook.getTrampolineByAddr((void *) &doIt, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -50,7 +50,7 @@ FILE *my_fopen(const char *__path, const char *__mode) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "fopen called [-] %s", __path);
     FILE *f;
     Trampoline trampoline;
-    if (injector.getTrampolineByAddr((void *) &fopen, trampoline)) {
+    if (chickenHook.getTrampolineByAddr((void *) &fopen, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -70,7 +70,7 @@ int my_open(const char *__path, int __flags, ...) {
 
     int res = -1;
     Trampoline trampoline;
-    if (injector.getTrampolineByAddr((void *) &open, trampoline)) {
+    if (chickenHook.getTrampolineByAddr((void *) &open, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -90,7 +90,7 @@ int my_SHA256_Final(unsigned char *md, void *c) {
 
     int res = -1;
     Trampoline trampoline;
-    if (injector.getTrampolineByAddr((void *) &sha256Addr, trampoline)) {
+    if (chickenHook.getTrampolineByAddr((void *) &sha256Addr, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -168,7 +168,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
 
     int res = -1;
     Trampoline trampoline;
-    if (injector.getTrampolineByAddr((void *) &read, trampoline)) {
+    if (chickenHook.getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
         printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
@@ -222,21 +222,21 @@ Java_com_self_vmcracker_MainActivity_stringFromJNI(
     }
     /*jniAddressFinder.getAddressOfJavaFunction("addressOf","This is a teststring");*/
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "install hook");
-    injector.init();
-    injector.inject((void *) &doIt, (void *) &myDoIt);
+    chickenHook.init();
+    chickenHook.inject((void *) &doIt, (void *) &myDoIt);
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "hook installed");
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "call function");
     doIt();
     //doIt();
     //doIt();
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "inject fopen");
-    injector.inject((void *) &fopen, (void *) &my_fopen);
+    chickenHook.inject((void *) &fopen, (void *) &my_fopen);
     if (fopen("/proc/self/maps", "r") == nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "!! FILE DESCRIPTOR NULL !!");
     }
 
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "inject open");
-    injector.inject((void *) &open, (void *) &my_open);
+    chickenHook.inject((void *) &open, (void *) &my_open);
     if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "!! FILE DESCRIPTOR <=0 !!");
     }
@@ -247,13 +247,13 @@ Java_com_self_vmcracker_MainActivity_stringFromJNI(
     if (fopen("/proc/self/maps", "r") == nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "!! FILE DESCRIPTOR NULL !!");
     }
-    injector.inject((void *) &read, (void *) &my_read);
+    chickenHook.inject((void *) &read, (void *) &my_read);
     void *dlopenAddr = dlsym(RTLD_NEXT, "dlopen");
     sha256Addr = dlsym(RTLD_NEXT, "SHA256_Final");
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "DLOPEN ADDR %p", dlopenAddr);
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "sha256Addr ADDR %p", sha256Addr);
     if (sha256Addr != nullptr) {
-        injector.inject((void *) &sha256Addr, (void *) &my_SHA256_Final);
+        chickenHook.inject((void *) &sha256Addr, (void *) &my_SHA256_Final);
     }
 
     /*int *content = *(reinterpret_cast<int **>(address));

@@ -10,7 +10,7 @@
 #include <sys/mman.h>
 #include <vector>
 
-class Injector {
+class ChickenHook {
 
 public:
 

@@ -10,7 +10,7 @@
 
 static std::vector<Trampoline> trampolines;
 
-bool Injector::inject(void *addr, void *hookFun) {
+bool ChickenHook::inject(void *addr, void *hookFun) {
     {
         Trampoline trampoline(addr, hookFun);
         trampoline.install();
@@ -53,7 +53,7 @@ void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
 }
 
 
-void Injector::installHandler() {
+void ChickenHook::installHandler() {
     struct sigaction sa;
 
     memset(&sa, 0, sizeof(struct sigaction));
@@ -65,12 +65,12 @@ void Injector::installHandler() {
     sigaction(SIGSEGV, &sa, NULL);
 }
 
-bool Injector::init() {
+bool ChickenHook::init() {
     installHandler();
     return false;
 }
 
-bool Injector::getTrampolineByAddr(void *addr, Trampoline &_trampoline) {
+bool ChickenHook::getTrampolineByAddr(void *addr, Trampoline &_trampoline) {
 
     for (auto trampoline : trampolines) {
         if (trampoline.getOriginal() == addr) {
