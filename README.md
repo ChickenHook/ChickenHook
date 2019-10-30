@@ -53,9 +53,10 @@ example here shows a hook function for libc's open
 
 4. Inject the trampoline  (enable the hook)
 
-    
+```c
     chickenHook.inject((void *) &open, (void *) &my_open);
-    
+```
+
 
 ## Build
 
