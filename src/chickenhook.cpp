@@ -5,11 +5,18 @@
 #include <android/log.h>
 #include <ucontext.h>
 #include <setjmp.h>
-#include "chickenHook/injector.h"
+#include "chickenHook/chickenhook.h"
 #include "chickenHook/trampoline.h"
 
 static std::vector<Trampoline> trampolines;
 
+/**
+ * Injects a trampoline at the given address
+ *
+ * @param addr the address where the trampoline should be injected
+ * @param callback the function that will be called instead
+ * @return true on success
+ */
 bool ChickenHook::inject(void *addr, void *hookFun) {
     {
         Trampoline trampoline(addr, hookFun);
@@ -34,16 +41,12 @@ void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
 #ifdef __i386__
             p->uc_mcontext.gregs[REG_EIP] = reinterpret_cast<greg_t>(hookFun);
 #elif __aarch64__
-            //p->uc_mcontext.regs[29] = reinterpret_cast<greg_t>(hookFun);
             p->uc_mcontext.pc = reinterpret_cast<greg_t>(hookFun);
+#elif __x86_64__
+            p->uc_mcontext.gregs[REG_RIP] = reinterpret_cast<greg_t>(hookFun);
 #else
 #error "UNSUPPORTED"
 #endif
-            //hookFun();
-            //trampoline.copyOriginal();
-            //void (*origFun)() =(void (*)()) trampoline.getOriginal();
-            //origFun();
-            //trampoline.install();
         }
 
     }
@@ -65,11 +68,20 @@ void ChickenHook::installHandler() {
     sigaction(SIGSEGV, &sa, NULL);
 }
 
+/**
+ * Initiates chicken hook
+ */
 bool ChickenHook::init() {
     installHandler();
     return false;
 }
 
+/**
+ * Retrieve the corresponding trampoline for the given address
+ *
+ * @param addr the address of the trampoline (call by reference)
+ * @return true on success
+ */
 bool ChickenHook::getTrampolineByAddr(void *addr, Trampoline &_trampoline) {
 
     for (auto trampoline : trampolines) {

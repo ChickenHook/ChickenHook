@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ChickenHook" default="help">
+
+    <target name="configure-linux">
+        <mkdir dir="build" />
+
+        <exec dir="build" executable="cmake" failonerror="true">
+            <arg line="../src/" />
+        </exec>
+    </target>
+
+    <target name="compile-linux">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="-j8" />
+        </exec>
+
+    </target>
+
+    <target name="help">
+        <echo message="Usage:" />
+        <echo message="configure-linux - Configures the linux build" />
+        <echo message="compile-linux - Compiles the chickenhook static library for linux" />
+    </target>
+
+</project>
