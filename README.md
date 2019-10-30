@@ -8,21 +8,8 @@
 Supported platforms: x86, arm64
 
 ## Usage
-1. Global variable (will be replaced with singelton in future)
 
-```c
-    static ChickenHook chickenHook;
-```
-
-2. Init chickenhook (only once!)
-
-```c
-    chickenHook.init();
-```
-
-
-
-3. Create the hook function (the function that should be called instead of the original function)
+1. Create the hook function (the function that should be called instead of the original function)
 
 example here shows a hook function for libc's open
 
@@ -43,7 +30,7 @@ example here shows a hook function for libc's open
             // We call the function
             res = open(__path, __flags);
             // afterwards we install our trampoline again
-            trampoline.install();
+            trampolinecode;
             // that's it!
             return res;
         } else {
@@ -54,19 +41,13 @@ example here shows a hook function for libc's open
     }
 ```
 
-4. Inject the trampoline  (enable the hook)
+2. Inject the trampoline  (enable the hook)
 
 ```c
-    chickenHook.inject((void *) &open, (void *) &my_open);
+    ChickenHook::getInstance().hook((void *) &open, (void *) &my_open);
 ```
 
 
 ## Build
 
 Linux ant and Android gradle...
-
-## CI
-Please check our CI
-```
-https://dev.azure.com/sascharoth/sascharoth/_build?definitionId=2
-```

@@ -21,6 +21,8 @@ class ChickenHook {
 
 public:
 
+    static ChickenHook &getInstance();
+
     /**
      * Initiates chicken hook
      */
@@ -33,7 +35,7 @@ public:
      * @param callback the function that will be called instead
      * @return true on success
      */
-    bool inject(void *addr, void *callback);
+    bool hook(void *addr, void *callback);
 
     /**
      * Retrieve the corresponding trampoline for the given address

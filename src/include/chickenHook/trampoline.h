@@ -5,6 +5,8 @@
 
 #include <vector>
 #include <setjmp.h>
+#include <mutex>
+
 #ifdef __aarch64__
 #define CODE_SIZE 64
 #elif __i386__
@@ -41,6 +43,8 @@ public:
      */
     bool install();
 
+    bool reinstall();
+
     /**
      * Returns the hook function
      * @return the address of the function to be called instead of the original function
@@ -58,9 +62,22 @@ public:
      */
     void *getOriginal();
 
+    /**
+     * Locks the trampoline.
+     * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+     */
+    void lock();
+
+    /**
+    * Locks the trampoline.
+    * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+    */
+    void unlock();
+
 private:
     void *_original_addr;
     void *_hook_addr;
     std::vector<uint8_t> _original_code;
+    std::mutex *_trampoline_lock{};
 
 };
