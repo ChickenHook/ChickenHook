@@ -4,10 +4,10 @@
 
 #include "chickenHook/trampoline.h"
 #include <stdio.h>
-#include <bits/sysconf.h>
 #include <sys/mman.h>
 #include <vector>
 #include <android/log.h>
+#include <unistd.h>
 
 bool updatePermissions(void *addr) {
     size_t pagesize = (size_t) sysconf(_SC_PAGESIZE);
