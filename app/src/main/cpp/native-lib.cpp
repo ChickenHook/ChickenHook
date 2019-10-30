@@ -31,16 +31,21 @@ void doIt() {
 }
 
 void myDoIt() {
+    // this myDoIt will be called instead of doIt
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "hooked function called myDoIt");
+    // yeah we're inside! But sometimes you want to call the original function also.
+    // For this purpose we try to retrieve the corresponding trampoline.
     Trampoline trampoline;
     if (chickenHook.getTrampolineByAddr((void *) &doIt, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-
+        // Now we copy the original function code into the original function
         trampoline.copyOriginal();
+        // We call the function
         doIt();
+        // afterwards we install our trampoline again
         trampoline.install();
-
+        // thats it!
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function cannot call original function");
