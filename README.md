@@ -61,3 +61,8 @@ example here shows a hook function for libc's open
 ## Build
 
 Linux ant and Android gradle...
+
+## CI
+```
+https://dev.azure.com/sascharoth/sascharoth/_build?definitionId=2
+```
