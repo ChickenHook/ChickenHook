@@ -1,7 +1,0 @@
-Executable : /home/sascharoth/Android/Sdk/cmake/3.10.2.4988404/bin/ninja
-arguments : 
--C
-/home/sascharoth/Development/git/VmCracker/app/.cxx/cmake/debug/armeabi-v7a
-native-lib
-jvmArgs : 
-

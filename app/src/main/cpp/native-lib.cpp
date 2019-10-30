@@ -256,33 +256,7 @@ Java_com_self_vmcracker_MainActivity_stringFromJNI(
         chickenHook.inject((void *) &sha256Addr, (void *) &my_SHA256_Final);
     }
 
-    /*int *content = *(reinterpret_cast<int **>(address));
-    for (int i = 0; i < 12; i++) {
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "Java int is: <%d> <%p>", content[i], content + i);
-        if (content[i] == 13443) {
-            char *charContent = *(reinterpret_cast<char **>(content[i + 1]));
-            for (int k = 0; k < 85; k++) {
-                __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "Java stringdeep is: <%c>", charContent[k]);
-            }
-        }
-    }
-
-    char *charContent = *(reinterpret_cast<char **>(address));
-    for (int i = 0; i < 85; i++) {
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "Java string is: <%c> <%p>", charContent[i], content + i);
-    }*/
-
 
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
-}
-
-extern "C" JNIEXPORT jlong JNICALL
-Java_com_self_vmcracker_MainActivity_addressOf(
-        JNIEnv *env,
-        jobject callee,
-        jobject array) {
-
-    //return addressOf(env, callee, array);
-    return 0;
 }
