@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook?branchName=develop)](https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1&branchName=develop)
+
 # ChickenHook 
 <img src="./logo.png" alt="ChickenHook logo" height="200" width="200" />
 
