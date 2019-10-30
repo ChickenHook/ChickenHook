@@ -1,0 +1,68 @@
+
+{
+	"buildFiles" : 
+	[
+		"/home/sascharoth/Development/personal/chickenhook/CMakeLists.txt",
+		"/home/sascharoth/Development/personal/chickenhook/src/CMakeLists.txt",
+		"/home/sascharoth/Development/personal/chickenhook/test/CMakeLists.txt",
+		"/home/sascharoth/Development/personal/chickenhook/androidTest/CMakeLists.txt"
+	],
+	"cleanCommands" : 
+	[
+		"/home/sascharoth/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86 --target clean"
+	],
+	"cppFileExtensions" : [ "cpp" ],
+	"libraries" : 
+	{
+		"ChickenHook-Debug-x86" : 
+		{
+			"abi" : "x86",
+			"artifactName" : "ChickenHook",
+			"buildCommand" : "/home/sascharoth/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86 --target ChickenHook",
+			"buildType" : "debug",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -I../../../../../src/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/home/sascharoth/Development/personal/chickenhook/src/chickenhook.cpp",
+					"workingDirectory" : "/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86"
+				},
+				
+				{
+					"flags" : "  --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot   -I../../../../../src/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/home/sascharoth/Development/personal/chickenhook/src/trampoline.cpp",
+					"workingDirectory" : "/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86"
+				}
+			],
+			"output" : "/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/src/libChickenHook.a",
+			"toolchain" : "16155032503733721722"
+		},
+		"native-lib-Debug-x86" : 
+		{
+			"abi" : "x86",
+			"artifactName" : "native-lib",
+			"buildCommand" : "/home/sascharoth/Android/Sdk/cmake/3.6.4111459/bin/cmake --build /home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86 --target native-lib",
+			"buildType" : "debug",
+			"files" : 
+			[
+				
+				{
+					"flags" : "  --target=i686-none-linux-android19 --gcc-toolchain=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64 --sysroot=/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot  -Dnative_lib_EXPORTS -I../../../../../src/include/chickenHook -I../../../../../src/include  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -fno-addrsig -Wa,--noexecstack -Wformat -Werror=format-security  -std=c++14 -O0 -fno-limit-debug-info  -fPIC    -c ",
+					"src" : "/home/sascharoth/Development/personal/chickenhook/androidTest/src/main/cpp/native-lib.cpp",
+					"workingDirectory" : "/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86"
+				}
+			],
+			"output" : "/home/sascharoth/Development/personal/chickenhook/androidTest/build/intermediates/cmake/debug/obj/x86/libnative-lib.so",
+			"toolchain" : "16155032503733721722"
+		}
+	},
+	"toolchains" : 
+	{
+		"16155032503733721722" : 
+		{
+			"cCompilerExecutable" : "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang",
+			"cppCompilerExecutable" : "/home/sascharoth/Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++"
+		}
+	}
+}

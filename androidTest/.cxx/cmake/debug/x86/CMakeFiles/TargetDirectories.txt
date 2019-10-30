@@ -1,0 +1,10 @@
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/CMakeFiles/edit_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/CMakeFiles/rebuild_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/src/CMakeFiles/edit_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/src/CMakeFiles/rebuild_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/src/CMakeFiles/ChickenHook.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/test/CMakeFiles/edit_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/test/CMakeFiles/rebuild_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/androidTest/CMakeFiles/rebuild_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/androidTest/CMakeFiles/edit_cache.dir
+/home/sascharoth/Development/personal/chickenhook/androidTest/.cxx/cmake/debug/x86/androidTest/CMakeFiles/native-lib.dir

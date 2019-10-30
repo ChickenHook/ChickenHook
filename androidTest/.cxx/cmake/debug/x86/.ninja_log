@@ -1,0 +1,6 @@
+# ninja log v5
+0	324	0	src/CMakeFiles/ChickenHook.dir/trampoline.cpp.o	3e51058acbddcae5
+0	334	0	src/CMakeFiles/ChickenHook.dir/chickenhook.cpp.o	26f69d505e94b466
+335	345	0	src/libChickenHook.a	c0e5fd9e8010ef05
+345	831	0	androidTest/CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	6c98c47856a22688
+831	875	0	../../../../build/intermediates/cmake/debug/obj/x86/libnative-lib.so	676787dedc6604e6

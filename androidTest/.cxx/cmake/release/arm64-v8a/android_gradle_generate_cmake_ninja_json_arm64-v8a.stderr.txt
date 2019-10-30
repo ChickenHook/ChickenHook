@@ -1,0 +1,4 @@
+CMake Error at CMakeLists.txt:11 (add_subdirectory):
+  add_subdirectory given source "app" which is not an existing directory.
+
+
