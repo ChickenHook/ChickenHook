@@ -3,11 +3,12 @@
 #include <android/log.h>
 #include <dlfcn.h>
 #include <vector>
-#include "chickenHook/injector.h"
+#include "chickenHook/chickenhook.h"
 #include <fcntl.h>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
+#include <unistd.h>
 
 
 jlong (*addressOf)(JNIEnv *, jobject, jobject);

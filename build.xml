@@ -18,7 +18,8 @@
 
     <target name="help">
         <echo message="Usage:" />
-        <echo message="compile-linux - " />
+        <echo message="configure-linux - Configures the linux build" />
+        <echo message="compile-linux - Compiles the chickenhook static library for linux" />
     </target>
 
 </project>

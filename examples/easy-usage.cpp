@@ -1,5 +1,5 @@
 
-#include "chickenHook/injector.h"
+#include "chickenHook/chickenhook.h"
 
 static ChickenHook chickenHook;
 
