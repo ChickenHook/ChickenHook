@@ -51,3 +51,15 @@ example here shows a hook function for libc's open
 ## Build
 
 Linux ant and Android gradle...
+
+### Linux
+```
+ant configure-linux compile-linux
+```
+artifacts will be in build/libs/
+
+### Android
+Use as an Android Studio project or:
+```
+gradle assemble
+```
