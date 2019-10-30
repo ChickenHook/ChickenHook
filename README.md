@@ -5,7 +5,7 @@
 
 ## General
 
-Supported platforms: x86, arm64
+Supported platforms: x86, arm64, x86_64 (experimental)
 
 ## Usage
 
