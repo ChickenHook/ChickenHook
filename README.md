@@ -1,4 +1,4 @@
-# ChickenHook
+# ChickenHook <img src="/logo.png" alt="ChickenHook logo" height="200" width="200" />
 
 ## General
 
