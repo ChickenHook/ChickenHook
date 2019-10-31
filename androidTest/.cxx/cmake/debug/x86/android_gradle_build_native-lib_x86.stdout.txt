@@ -1,5 +1,0 @@
-[1/5] Building CXX object src/CMakeFiles/ChickenHook.dir/trampoline.cpp.o
-[2/5] Building CXX object src/CMakeFiles/ChickenHook.dir/chickenhook.cpp.o
-[3/5] Linking CXX static library src/libChickenHook.a
-[4/5] Building CXX object androidTest/CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o
-[5/5] Linking CXX shared library ../../../../build/intermediates/cmake/debug/obj/x86/libnative-lib.so

@@ -189,6 +189,45 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     return res;
 }
 
+static jstring my_installHooks(
+        JNIEnv *env,
+        jobject thiz);
+
+// register natives hook
+jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *methods,
+                        jint size) {
+    __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
+                        "RegisterNatives called with size <%d>", size);
+
+    JNINativeMethod newMethods[size];
+    for (int i = 0; i < size; i++) {
+        JNINativeMethod jniNativeMethod = methods[i];
+        __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
+                            "Found function: %s with addr <%p>", jniNativeMethod.name,
+                            jniNativeMethod.fnPtr);
+        newMethods[i].name = jniNativeMethod.name;
+        newMethods[i].fnPtr = (void*)&my_installHooks;
+        newMethods[i].signature = jniNativeMethod.signature;
+    }
+
+    int res = -1;
+    Trampoline trampoline;
+    auto fp = &_JNIEnv::RegisterNatives;
+    if (ChickenHook::getInstance().getTrampolineByAddr(*((void **) &fp), trampoline)) {
+        __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
+                            "hooked function call original function");
+        trampoline.copyOriginal();
+        res = env->RegisterNatives(clazz, newMethods, size);
+        trampoline.reinstall();
+        return res;
+    } else {
+        __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
+                            "hooked function cannot call original function");
+    }
+    return res;
+}
+
+
 /**
  * Some hook examples
  */
@@ -243,6 +282,7 @@ static jstring installHooks(
 
 ///////// JNI HOOKING
 
+// lets approve hook register natives works!!
 static jstring my_installHooks(
         JNIEnv *env,
         jobject thiz) {
@@ -252,30 +292,10 @@ static jstring my_installHooks(
     std::string hookStr = "Hello from our Hook ;)";
     jstring hookJavaString = env->NewStringUTF(hookStr.c_str());
 
-    jstring res;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &installHooks, trampoline)) {
-        __android_log_print(ANDROID_LOG_DEBUG, "my_installHooks",
-                            "hooked function call original function");
-        // Now we copy the original function code into the original function
-        trampoline.copyOriginal();
-        // We call the function
-        res = installHooks(env, thiz);
-        // afterwards we install our trampoline again
-        trampoline.reinstall();
-        // return our hooked jni string
-        return hookJavaString;
-    } else {
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
-                            "hooked function cannot call original function");
-    }
-    return hookJavaString;
-}
+    // this hook works without trampoline!
+    installHooks(env, thiz);
 
-/**
- * This function will be called when library get's initialized
- */
-void __attribute__((constructor)) calledFirst() {
+    return hookJavaString;
 }
 
 
@@ -310,13 +330,16 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     if (vm->GetEnv((void **) (&env), JNI_VERSION_1_4) != JNI_OK) {
         return -1;
     }
+    auto fp = &_JNIEnv::RegisterNatives;
+    // hook register natives
+    ChickenHook::getInstance().hook(*((void **) &fp),
+                                    (void *) &my_RegisterNatives);
 
     if (!registerNativeMethods(env, classPathName,
                                (JNINativeMethod *) gMethods,
                                sizeof(gMethods) / sizeof(gMethods[0]))) {
         return -1;
     }
-    ChickenHook::getInstance().hook((void *) &installHooks, (void *) &my_installHooks);
 
     return JNI_VERSION_1_4;
 }
