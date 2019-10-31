@@ -51,10 +51,16 @@ static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
     __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Caught segfault at address <%p>",
                         si->si_addr);
 
+    bool trampolineFound = false;
     auto *p = (ucontext_t *) arg;
+    if (trampolines.size() == 0) {
+        __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler",
+                            "Warning!! trampoline size is 0");
+    }
     // search the corresponding trampoline
     for (auto trampoline : trampolines) {
         if (trampoline.getOriginal() == si->si_addr) {
+            trampolineFound = true;
             __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Found hook <%p>",
                                 si->si_addr);
             void *hook = trampoline.getHook();
@@ -73,7 +79,12 @@ static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
         }
 
     }
-    __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Continue execution");
+    if (trampolineFound) {
+        __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Continue execution");
+    } else {
+        __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler",
+                            "No corresponding trampoline found :(");
+    }
 
     //exit(0);
 }

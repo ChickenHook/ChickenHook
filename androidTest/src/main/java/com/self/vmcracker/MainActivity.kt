@@ -24,7 +24,6 @@ class MainActivity : Activity() {
             Log.d("TEST", "This is a test callback")
             true
         }
-        sample_text?.text = "" + "test"
 
 
         Looper.getMainLooper().setMessageLogging { string -> // TODO try to use native hook to create java hooks and hook this class!
@@ -32,7 +31,7 @@ class MainActivity : Activity() {
         }
 
         digest("HALLO")
-        installHooks()
+        sample_text?.text = installHooks()
         digest("HALLO")
         readFile(File("/proc/self/maps"))
     }

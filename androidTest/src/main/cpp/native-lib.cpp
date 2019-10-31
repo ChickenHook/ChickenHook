@@ -19,6 +19,7 @@ static void *sha256Addr;
 void doIt() {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "original functioncalled");
 }
+
 /**
  * Hook function
  */
@@ -191,8 +192,8 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
 /**
  * Some hook examples
  */
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_self_vmcracker_MainActivity_installHooks(
+
+static jstring installHooks(
         JNIEnv *env,
         jobject /* this */) {
 
@@ -238,4 +239,84 @@ Java_com_self_vmcracker_MainActivity_installHooks(
 
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
+}
+
+///////// JNI HOOKING
+
+static jstring my_installHooks(
+        JNIEnv *env,
+        jobject thiz) {
+    __android_log_print(ANDROID_LOG_DEBUG, "my_installHooks", "JNI hook called!");
+
+    // let's manpulate the string that will be returned to the VM
+    std::string hookStr = "Hello from our Hook ;)";
+    jstring hookJavaString = env->NewStringUTF(hookStr.c_str());
+
+    jstring res;
+    Trampoline trampoline;
+    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &installHooks, trampoline)) {
+        __android_log_print(ANDROID_LOG_DEBUG, "my_installHooks",
+                            "hooked function call original function");
+        // Now we copy the original function code into the original function
+        trampoline.copyOriginal();
+        // We call the function
+        res = installHooks(env, thiz);
+        // afterwards we install our trampoline again
+        trampoline.reinstall();
+        // return our hooked jni string
+        return hookJavaString;
+    } else {
+        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
+                            "hooked function cannot call original function");
+    }
+    return hookJavaString;
+}
+
+/**
+ * This function will be called when library get's initialized
+ */
+void __attribute__((constructor)) calledFirst() {
+}
+
+
+////////// JNI STUFF
+
+static const JNINativeMethod gMethods[] = {
+        {"installHooks", "()Ljava/lang/String;", (void *) installHooks},
+};
+static const char *classPathName = "com/self/vmcracker/MainActivity";
+
+static int registerNativeMethods(JNIEnv *env, const char *className,
+                                 JNINativeMethod *gMethods, int numMethods) {
+    jclass clazz;
+    clazz = env->FindClass(className);
+    if (clazz == NULL) {
+        __android_log_print(ANDROID_LOG_DEBUG, "registerNativeMethods",
+                            "Native registration unable to find class '%s'", className);
+        return JNI_FALSE;
+    }
+    if (env->RegisterNatives(clazz, gMethods, numMethods) < 0) {
+        __android_log_print(ANDROID_LOG_DEBUG, "registerNativeMethods",
+                            "Native registration unable to register natives...");
+        return JNI_FALSE;
+    }
+    return JNI_TRUE;
+}
+
+jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
+
+
+    JNIEnv *env = NULL;
+    if (vm->GetEnv((void **) (&env), JNI_VERSION_1_4) != JNI_OK) {
+        return -1;
+    }
+
+    if (!registerNativeMethods(env, classPathName,
+                               (JNINativeMethod *) gMethods,
+                               sizeof(gMethods) / sizeof(gMethods[0]))) {
+        return -1;
+    }
+    ChickenHook::getInstance().hook((void *) &installHooks, (void *) &my_installHooks);
+
+    return JNI_VERSION_1_4;
 }

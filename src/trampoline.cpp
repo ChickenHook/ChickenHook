@@ -27,20 +27,24 @@ bool updatePermissions(void *addr, int permissions) {
  * Installs the trampoline at the given address
  * @return true on success
  */
-bool Trampoline::install() {
+bool Trampoline::install(bool doLock) {
+    if (doLock) lock();
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Install hook at <%p>",
                         _original_addr);
     if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "Unable to update permissions <%p>",
                             _original_addr);
+        if (doLock) unlock();
         return false;
     }
     _original_code.resize(CODE_SIZE);
     memcpy(&_original_code[0], _original_addr, CODE_SIZE);
     ((uint64_t *) _original_addr)[0] = 0xffffff;
     if (!updatePermissions(_original_addr, PROT_READ | PROT_EXEC)) {
+        if (doLock) unlock();
         return true; // this doesn't break our use-case
     }
+    if (doLock) unlock();
     return true;
 }
 
@@ -50,7 +54,7 @@ bool Trampoline::install() {
  * @return true on success
  */
 bool Trampoline::reinstall() {
-    install();
+    install(false);
     unlock();
     return true;
 }
@@ -94,7 +98,7 @@ bool Trampoline::copyOriginal() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Copy _original_code at %p",
                         _original_addr);
     lock();
-    if(!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)){
+    if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
         return false;
     }
     memcpy(_original_addr, &_original_code[0], CODE_SIZE);

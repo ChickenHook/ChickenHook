@@ -41,7 +41,7 @@ public:
      * Installs the trampoline at the given address
      * @return true on success
      */
-    bool install();
+    bool install(bool doLock = true);
 
     bool reinstall();
 
