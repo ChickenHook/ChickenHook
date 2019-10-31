@@ -11,7 +11,7 @@
 #include <unistd.h>
 
 static void *sha256Addr;
-
+static void *nativeLoad;
 
 /**
  * Original function
@@ -206,7 +206,7 @@ jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *method
                             "Found function: %s with addr <%p>", jniNativeMethod.name,
                             jniNativeMethod.fnPtr);
         newMethods[i].name = jniNativeMethod.name;
-        newMethods[i].fnPtr = (void*)&my_installHooks;
+        newMethods[i].fnPtr = (void *) &my_installHooks;
         newMethods[i].signature = jniNativeMethod.signature;
     }
 
@@ -264,7 +264,7 @@ static jstring installHooks(
     } // we should see open and fopen hook was triggered while calling fopen!
 
     // read
-    ChickenHook::getInstance().hook((void *) &read, (void *) &my_read);
+    //ChickenHook::getInstance().hook((void *) &read, (void *) &my_read);
     // we will see some android read actions ;)
 
     // try to hook function our library doesn't link against...
@@ -275,6 +275,8 @@ static jstring installHooks(
         ChickenHook::getInstance().hook((void *) &sha256Addr, (void *) &my_SHA256_Final);
     }
 
+    nativeLoad = dlsym(RTLD_NEXT, "Runtime_nativeLoad");
+    __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "Runtime_nativeLoad ADDR %p", nativeLoad);
 
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
@@ -324,8 +326,6 @@ static int registerNativeMethods(JNIEnv *env, const char *className,
 }
 
 jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
-
-
     JNIEnv *env = NULL;
     if (vm->GetEnv((void **) (&env), JNI_VERSION_1_4) != JNI_OK) {
         return -1;
