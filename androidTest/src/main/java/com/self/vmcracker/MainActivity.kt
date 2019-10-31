@@ -2,7 +2,6 @@ package com.self.vmcracker
 
 import android.app.Activity
 import android.util.Log
-import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.*
 import java.io.File
@@ -21,14 +20,11 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val button_test = findViewById<Button>(R.id.test_button)
-        button_test.setOnClickListener {
+        test_button?.setOnClickListener {
             Log.d("TEST", "This is a test callback")
-            Log.d("TEST", "This is a test callback2")
-
             true
         }
-        sample_text.text = "" + "test"
+        sample_text?.text = "" + "test"
 
 
         Looper.getMainLooper().setMessageLogging { string -> // TODO try to use native hook to create java hooks and hook this class!
@@ -36,7 +32,7 @@ class MainActivity : Activity() {
         }
 
         digest("HALLO")
-        stringFromJNI(0)
+        installHooks()
         digest("HALLO")
         readFile(File("/proc/self/maps"))
     }
@@ -50,7 +46,7 @@ class MainActivity : Activity() {
         val encodedhash = messageDigest.digest(
             str.toByteArray()
         )
-        Log.d("DIGEST", "got digest ${encodedhash.toHexString()}")
+        Log.d("MainActivity", "got digest ${encodedhash.toHexString()}")
     }
 
 
@@ -58,7 +54,7 @@ class MainActivity : Activity() {
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    external fun stringFromJNI(address: Long): String
+    external fun installHooks(): String
 
     companion object {
 

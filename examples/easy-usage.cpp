@@ -1,8 +1,6 @@
 
 #include "chickenHook/chickenhook.h"
 
-static ChickenHook chickenHook;
-
 
 int my_open(const char *__path, int __flags,
             ...) { // the function signature must match the original function !!
@@ -10,12 +8,12 @@ int my_open(const char *__path, int __flags,
 
     int res = -1;
     Trampoline trampoline;
-    if (chickenHook.getTrampolineByAddr((void *) &open, trampoline)) {
+    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &open, trampoline)) {
         printf("call original function");
 
         trampoline.copyOriginal();
         res = open(__path, __flags);
-        trampoline.install();
+        trampoline.reinstall();
         return res;
     } else {
         printf("cannot call original function");
@@ -26,8 +24,7 @@ int my_open(const char *__path, int __flags,
 
 
 int main(int argc, char *argv[]) {
-    chickenHook.init();
-    chickenHook.inject((void *) &open, (void *) &my_open);
+    ChickenHook::getInstance().inject((void *) &open, (void *) &my_open);
     open("/proc/self/maps", "r");
     return 0;
 }

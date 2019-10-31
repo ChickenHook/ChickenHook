@@ -9,6 +9,17 @@
 #include "chickenHook/trampoline.h"
 
 static std::vector<Trampoline> trampolines;
+constexpr const char *TAG("ChickenHook");
+
+
+ChickenHook &ChickenHook::getInstance() {
+    {
+        static ChickenHook instance; // Guaranteed to be destroyed.
+        instance.init();
+        // Instantiated on first use.
+        return instance;
+    }
+}
 
 /**
  * Injects a trampoline at the given address
@@ -17,27 +28,39 @@ static std::vector<Trampoline> trampolines;
  * @param callback the function that will be called instead
  * @return true on success
  */
-bool ChickenHook::inject(void *addr, void *hookFun) {
-    {
-        Trampoline trampoline(addr, hookFun);
-        trampoline.install();
-        trampolines.push_back(trampoline);
-        return true;
-    }
+bool ChickenHook::hook(void *addr, void *callback) {
+    __android_log_print(ANDROID_LOG_DEBUG, TAG,
+                        "Inject trampoline into <%p> with hookfun <%p>", addr, callback);
+    Trampoline trampoline(addr, callback);
+    trampoline.install();
+    trampolines.push_back(trampoline);
+    return true;
 }
 
-void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
+/**
+ * Our trampoline receiver.
+ *
+ * This function should be triggered by the trampoline using linux signals: http://man7.org/linux/man-pages/man7/signal.7.html
+ * We inject invalid code into the function to be hooked so that linux triggers a signal like SIGILL or SIGSEGV.
+ * We catch those signals in this function
+ * @param signal the signal code
+ * @param si signal information
+ * @param arg ucontext
+ */
+static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
     __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Caught segfault at address <%p>",
                         si->si_addr);
 
-    ucontext_t *p = (ucontext_t *) arg;
+    auto *p = (ucontext_t *) arg;
+    // search the corresponding trampoline
     for (auto trampoline : trampolines) {
         if (trampoline.getOriginal() == si->si_addr) {
             __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Found hook <%p>",
                                 si->si_addr);
             void *hook = trampoline.getHook();
-            void (*hookFun)() =(void (*)()) hook;
-            __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Overwrite link register");
+            auto hookFun = (void (*)()) hook;
+            __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler", "Overwrite pc");
+            // now set the pc to our hook function
 #ifdef __i386__
             p->uc_mcontext.gregs[REG_EIP] = reinterpret_cast<greg_t>(hookFun);
 #elif __aarch64__
@@ -55,13 +78,17 @@ void segfault_sigaction(int signal, siginfo_t *si, void *arg) {
     //exit(0);
 }
 
-
+/**
+ * Installs a new sigaction handler
+ *
+ * We wait for signals triggered by the trampoline.
+ * We jump then to the replaced function
+ */
 void ChickenHook::installHandler() {
     struct sigaction sa;
-
     memset(&sa, 0, sizeof(struct sigaction));
     sigemptyset(&sa.sa_mask);
-    sa.sa_sigaction = segfault_sigaction;
+    sa.sa_sigaction = trampoline_receiver;
     sa.sa_flags = SA_SIGINFO;
 
     sigaction(SIGILL, &sa, NULL);
