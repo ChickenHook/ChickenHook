@@ -8,6 +8,7 @@
 #include <vector>
 #include <android/log.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 constexpr const char *TAG("Trampoline");
 
@@ -31,6 +32,7 @@ bool Trampoline::install(bool doLock) {
     if (doLock) lock();
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Install hook at <%p>",
                         _original_addr);
+    printInfo();
     if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "Unable to update permissions <%p>",
                             _original_addr);
@@ -68,6 +70,7 @@ Trampoline::Trampoline(void *addr, void *hookFun) {
     this->_original_addr = addr;
     this->_hook_addr = hookFun;
     this->_trampoline_lock = new std::mutex();
+    this->infoAvailable = dladdr(addr, &__info);
 }
 
 /**
@@ -120,5 +123,22 @@ void Trampoline::unlock() {
     if (_trampoline_lock != nullptr) {
         (*_trampoline_lock).unlock();
     }
+}
+
+void Trampoline::printInfo() {
+    if (infoAvailable == 0) {
+        return;
+    }
+    std::string libName;
+    std::string symbolName;
+    if (__info.dli_fname != nullptr) {
+        libName = __info.dli_fname;
+    }
+    if (__info.dli_sname != nullptr) {
+        symbolName = __info.dli_sname;
+    }
+
+    __android_log_print(ANDROID_LOG_DEBUG, TAG, "Trampoline: <%p> => %s:%s ",
+                        _original_addr, symbolName.c_str(), libName.c_str());
 }
 
