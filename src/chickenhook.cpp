@@ -85,8 +85,6 @@ static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
         __android_log_print(ANDROID_LOG_DEBUG, "HookSignalHandler",
                             "No corresponding trampoline found :(");
     }
-
-    //exit(0);
 }
 
 /**
@@ -111,7 +109,7 @@ void ChickenHook::installHandler() {
  */
 bool ChickenHook::init() {
     installHandler();
-    return false;
+    return true;
 }
 
 /**
