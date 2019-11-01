@@ -10,7 +10,7 @@ pool:
   vmImage: 'macos-latest'
 
 steps:
-- script:
+- script: |
     #!/usr/bin/env bash
     
     # Install AVD files
