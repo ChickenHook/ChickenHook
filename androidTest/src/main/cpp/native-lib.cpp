@@ -10,6 +10,8 @@
 #include <algorithm>
 #include <unistd.h>
 
+#define  SHA256_DIGEST_LENGTH 32
+
 static void *sha256Addr;
 static void *registerNatives;
 
@@ -97,6 +99,10 @@ int my_SHA256_Final(unsigned char *md, void *c) {
         int ((*my_SHA256_Final_FUN)(unsigned char *, void *)) =(int (*)(unsigned char *,
                                                                         void *)) (sha256Addr);
         res = my_SHA256_Final_FUN(md, c);
+        md[0]='H';
+        md[1]='O';
+        md[2]='O';
+        md[3]='K';
         trampoline.reinstall();
         return res;
     } else {
