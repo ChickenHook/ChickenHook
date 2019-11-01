@@ -136,8 +136,11 @@ void *my_dlsym(void *__handle, const char *__symbol) {
 
 void *my_dlopen(const char *__filename, int __flag) {
 
-    __android_log_print(ANDROID_LOG_DEBUG,
-                        "stringFromJNI", "my_dlopen called [-] <%s>", __filename);
+    if (__filename != nullptr) {
+        __android_log_print(ANDROID_LOG_DEBUG,
+                            "stringFromJNI", "my_dlopen called [-] <%s>", __filename);
+    }
+
 
     void *res = nullptr;
     Trampoline trampoline;
