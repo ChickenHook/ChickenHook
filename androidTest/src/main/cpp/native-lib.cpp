@@ -99,10 +99,10 @@ int my_SHA256_Final(unsigned char *md, void *c) {
         int ((*my_SHA256_Final_FUN)(unsigned char *, void *)) =(int (*)(unsigned char *,
                                                                         void *)) (sha256Addr);
         res = my_SHA256_Final_FUN(md, c);
-        md[0]='H';
-        md[1]='O';
-        md[2]='O';
-        md[3]='K';
+        md[0] = 'H';
+        md[1] = 'O';
+        md[2] = 'O';
+        md[3] = 'K';
         trampoline.reinstall();
         return res;
     } else {
@@ -396,8 +396,9 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     }
 
     // hook register natives
-    registerNatives = dlsym(RTLD_DEFAULT, // load other library with dlopen RTLD_NOW and set the handle here...
-                            "_ZN7_JNIEnv15RegisterNativesEP7_jclassPK15JNINativeMethodi");
+    registerNatives = dlsym(
+            RTLD_DEFAULT, // load other library with dlopen RTLD_NOW and set the handle here...
+            "_ZN7_JNIEnv15RegisterNativesEP7_jclassPK15JNINativeMethodi"); // you can also try to hook jniRegisterNativeMethods of libandroid_runtime.so
     if (registerNatives != nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "registerNatives ADDR %p",
                             registerNatives);
