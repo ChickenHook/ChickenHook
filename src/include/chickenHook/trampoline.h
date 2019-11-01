@@ -75,6 +75,9 @@ public:
     */
     void unlock();
 
+    /**
+     * Prints some information about the trampoline
+     */
     void printInfo();
 
 private:

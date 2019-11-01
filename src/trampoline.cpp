@@ -109,6 +109,10 @@ bool Trampoline::copyOriginal() {
     return true;
 }
 
+/**
+ * Locks the trampoline.
+ * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+ */
 void Trampoline::lock() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Lock %p",
                         _original_addr);
@@ -117,6 +121,10 @@ void Trampoline::lock() {
     }
 }
 
+/**
+* Locks the trampoline.
+* Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+*/
 void Trampoline::unlock() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Unlock %p",
                         _original_addr);
@@ -125,6 +133,9 @@ void Trampoline::unlock() {
     }
 }
 
+/**
+ * Prints some information about the trampoline
+ */
 void Trampoline::printInfo() {
     if (infoAvailable == 0) {
         return;
