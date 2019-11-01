@@ -342,7 +342,7 @@ static jstring installHooks(
 
     // dl hooking
     ChickenHook::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
-    ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
+    //ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
 
 
     std::string hello = "Hello from C++";
