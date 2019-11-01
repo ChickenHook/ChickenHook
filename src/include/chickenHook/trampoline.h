@@ -7,6 +7,8 @@
 #include <setjmp.h>
 #include <mutex>
 
+namespace ChickenHook {
+
 #ifdef __aarch64__
 #define CODE_SIZE 64
 #elif __i386__
@@ -22,62 +24,64 @@
  *
  * This class contains all neccessary functions to work with a trampoline.
  */
-class Trampoline {
-public:
-    /**
-     * Creates a new Trampoline
-     * @param addr the function the trampoline will be isntalled
-     * @param callback the function that will be called instead
-     */
-    Trampoline(void *addr, void *callback);
+    class Trampoline {
+    public:
+        /**
+         * Creates a new Trampoline
+         * @param addr the function the trampoline will be isntalled
+         * @param callback the function that will be called instead
+         */
+        Trampoline(void *addr, void *callback);
 
-    /**
-     * Used for call by reference calls
-     */
-    Trampoline();
+        /**
+         * Used for call by reference calls
+         */
+        Trampoline();
 
 
-    /**
-     * Installs the trampoline at the given address
-     * @return true on success
-     */
-    bool install();
+        /**
+         * Installs the trampoline at the given address
+         * @return true on success
+         */
+        bool install();
 
-    bool reinstall();
+        bool reinstall();
 
-    /**
-     * Returns the hook function
-     * @return the address of the function to be called instead of the original function
-     */
-    void *getHook();
+        /**
+         * Returns the hook function
+         * @return the address of the function to be called instead of the original function
+         */
+        void *getHook();
 
-    /**
-     * Copies the original bytecode into the original function
-     * @return
-     */
-    bool copyOriginal();
+        /**
+         * Copies the original bytecode into the original function
+         * @return
+         */
+        bool copyOriginal();
 
-    /**
-     * @return the address of the function where the trampoline was / will be installed
-     */
-    void *getOriginal();
+        /**
+         * @return the address of the function where the trampoline was / will be installed
+         */
+        void *getOriginal();
 
-    /**
-     * Locks the trampoline.
-     * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
-     */
-    void lock();
+        /**
+         * Locks the trampoline.
+         * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+         */
+        void lock();
 
-    /**
-    * Locks the trampoline.
-    * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
-    */
-    void unlock();
+        /**
+        * Locks the trampoline.
+        * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+        */
+        void unlock();
 
-private:
-    void *_original_addr;
-    void *_hook_addr;
-    std::vector<uint8_t> _original_code;
-    std::mutex *_trampoline_lock{};
+    private:
+        void *_original_addr;
+        void *_hook_addr;
+        std::vector<uint8_t> _original_code;
+        std::mutex *_trampoline_lock{};
 
-};
+    };
+
+}

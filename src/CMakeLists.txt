@@ -17,7 +17,8 @@ add_library( # Sets the name of the library.
         STATIC
 
         # Provides a relative path to your source file(s).
-        chickenhook.cpp
+        hooking.cpp
+        logging.cpp
         trampoline.cpp)
 
 target_include_directories(${PROJECT_NAME} INTERFACE
