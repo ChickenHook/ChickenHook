@@ -1,4 +1,7 @@
-#include <stddef.h>
+//
+// Created by Johny George Malayil on 01.11.19.
+//
+
 #include "chickenHook/logging.h"
 
 namespace ChickenHook {

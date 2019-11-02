@@ -3,11 +3,6 @@
 //
 
 #include "chickenHook/trampoline.h"
-#include <stdio.h>
-#include <sys/mman.h>
-#include <vector>
-#include <unistd.h>
-#include "chickenHook/logging.h"
 
 namespace ChickenHook {
 

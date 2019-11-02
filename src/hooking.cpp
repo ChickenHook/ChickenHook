@@ -2,11 +2,7 @@
 // Created by Sascha Roth on 25.10.19.
 //
 
-#include <ucontext.h>
-#include <setjmp.h>
 #include "chickenHook/hooking.h"
-#include "chickenHook/trampoline.h"
-#include "chickenHook/logging.h"
 
 namespace ChickenHook {
 

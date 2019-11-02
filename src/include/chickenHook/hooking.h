@@ -4,11 +4,15 @@
 
 #pragma once
 
-#include "trampoline.h"
 #include <stdio.h>
 #include <bits/sysconf.h>
 #include <sys/mman.h>
 #include <vector>
+#include <ucontext.h>
+#include <setjmp.h>
+
+#include "trampoline.h"
+#include "logging.h"
 
 
 namespace ChickenHook {

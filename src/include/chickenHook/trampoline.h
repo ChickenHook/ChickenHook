@@ -2,10 +2,12 @@
 #pragma once
 
 #include <stdio.h>
-
 #include <vector>
 #include <setjmp.h>
 #include <mutex>
+#include <sys/mman.h>
+#include <unistd.h>
+#include "logging.h"
 
 namespace ChickenHook {
 
