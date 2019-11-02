@@ -58,13 +58,8 @@ jobs:
           targets: 'configure-android compile-android install-android'
       - task: PublishBuildArtifacts@1
         inputs:
-          #pathtoPublish: 'artifactsOut'
-          #artifactName: 'drop'
-          #publishLocation: 'Container' # Options: container, filePath
-          #targetPath: # Required when publishLocation == FilePath
-          #parallel: false # Optional
-          #parallelCount: # Optional
-          #fileCopyOptions: #Optional
+          pathtoPublish: 'artifactsOut'
+          artifactName: 'ChickenHook'
 
   - job: build_for_linux
     pool:
@@ -82,10 +77,5 @@ jobs:
           targets: 'configure-linux compile-linux test-linux'
       - task: PublishBuildArtifacts@1
         inputs:
-          #pathtoPublish: 'artifactsOut'
-          #artifactName: 'drop'
-          #publishLocation: 'Container' # Options: container, filePath
-          #targetPath: # Required when publishLocation == FilePath
-          #parallel: false # Optional
-          #parallelCount: # Optional
-          #fileCopyOptions: #Optional
+          pathtoPublish: 'artifactsOut'
+          artifactName: 'ChickenHook'
