@@ -27,7 +27,7 @@ namespace ChickenHook {
         if (doLock) lock();
         log("Install hook at <%p>", _original_addr);
         printInfo();
-        if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
+        if (!updatePermissions(_original_addr, PROT_NONE | PROT_READ| PROT_WRITE | PROT_EXEC)) {
             log("Unable to update permissions <%p>", _original_addr);
 
             if (doLock) unlock();
