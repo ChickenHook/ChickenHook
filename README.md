@@ -18,8 +18,24 @@
 
 ## General
 
+ChickenHook is a multi architecture hooking framework.
+
 Supported architectures: x86, arm64, x86_64 (experimental)
 Supported platforms: Android, Linux
+
+## Requirements
+
+* ant
+
+### Linux
+* cmake
+* make
+
+### Android
+* Android SDK
+* Android NDK 
+* Android Studio (Optional)
+
 ## Usage
 
 1. Create the hook function (the function that should be called instead of the original function)
@@ -63,7 +79,7 @@ example here shows a hook function for libc's open
 
 ## Build
 
-Linux ant and Android gradle...
+Currently ChickenHook can be build for linux and android.
 
 ### Linux
 ```
@@ -74,5 +90,9 @@ artifacts will be in build/libs/
 ### Android
 Use as an Android Studio project or:
 ```
-gradle assemble
+ant configure-android compile-android test-android
 ```
+
+## Include in your Project
+
+WIP

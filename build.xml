@@ -20,10 +20,30 @@
         </exec>
     </target>
 
+    <target name="configure-android">
+    </target>
+
+    <target name="compile-android">
+        <exec dir="." executable="gradle" failonerror="true">
+            <arg line="assembleDebug" />
+        </exec>
+    </target>
+
+
+    <target name="test-android">
+        <exec dir="." executable="gradle" failonerror="true">
+            <arg line="connectedAndroidTest" />
+        </exec>
+    </target>
+
     <target name="help">
         <echo message="Usage:" />
         <echo message="configure-linux - Configures the linux build" />
         <echo message="compile-linux - Compiles the chickenhook static library for linux" />
+        <echo message="test-linux - Tests chickenhook for linux" />
+        <echo message="configure-android - Configures the android build" />
+        <echo message="compile-android - Compiles the chickenhook static library for android" />
+        <echo message="test-android - Tests chickenhook for android" />
     </target>
 
 </project>

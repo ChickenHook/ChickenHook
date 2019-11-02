@@ -31,7 +31,7 @@ int main(int argc, char *arv[]) {
     }
 
     // lets check it in a loop
-    for(int i=0;i<1000;i++){
+    for (int i = 0; i < 10; i++) {
         if (doIt()) {  // after applying the hook, we expect false as return value
             return -1;
         }
