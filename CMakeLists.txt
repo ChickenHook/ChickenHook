@@ -8,4 +8,8 @@ project(ChickenHook
 
 add_subdirectory(src)
 add_subdirectory(test)
-add_subdirectory(androidTest) # with linux we include linuxTest here!
+IF (ANDROID)
+    add_subdirectory(androidTest) # with linux we include linuxTest here!
+else (ANDROID)
+    add_subdirectory(linuxTest)
+endif (ANDROID)
