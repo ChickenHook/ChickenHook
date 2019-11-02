@@ -6,6 +6,7 @@
 #include <vector>
 #include <setjmp.h>
 #include <mutex>
+#include <dlfcn.h>
 
 #ifdef __aarch64__
 #define CODE_SIZE 64
@@ -41,7 +42,7 @@ public:
      * Installs the trampoline at the given address
      * @return true on success
      */
-    bool install();
+    bool install(bool doLock = true);
 
     bool reinstall();
 
@@ -74,10 +75,16 @@ public:
     */
     void unlock();
 
+    /**
+     * Prints some information about the trampoline
+     */
+    void printInfo();
+
 private:
     void *_original_addr;
     void *_hook_addr;
     std::vector<uint8_t> _original_code;
     std::mutex *_trampoline_lock{};
-
+    Dl_info __info;
+    int infoAvailable = 0;
 };

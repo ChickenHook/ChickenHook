@@ -1,6 +1,7 @@
 package com.self.vmcracker
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.*
@@ -22,17 +23,18 @@ class MainActivity : Activity() {
 
         test_button?.setOnClickListener {
             Log.d("TEST", "This is a test callback")
+            startActivity(Intent(this, WebViewActivity::class.java))
             true
         }
-        sample_text?.text = "" + "test"
 
 
-        Looper.getMainLooper().setMessageLogging { string -> // TODO try to use native hook to create java hooks and hook this class!
+        Looper.getMainLooper().setMessageLogging { string ->
+            // TODO try to use native hook to create java hooks and hook this class!
             Log.d("LOOPER HOOK", string)
         }
 
         digest("HALLO")
-        installHooks()
+        sample_text?.text = installHooks()
         digest("HALLO")
         readFile(File("/proc/self/maps"))
     }

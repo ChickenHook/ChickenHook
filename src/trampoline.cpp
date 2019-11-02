@@ -8,6 +8,7 @@
 #include <vector>
 #include <android/log.h>
 #include <unistd.h>
+#include <dlfcn.h>
 
 constexpr const char *TAG("Trampoline");
 
@@ -27,20 +28,25 @@ bool updatePermissions(void *addr, int permissions) {
  * Installs the trampoline at the given address
  * @return true on success
  */
-bool Trampoline::install() {
+bool Trampoline::install(bool doLock) {
+    if (doLock) lock();
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Install hook at <%p>",
                         _original_addr);
+    printInfo();
     if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
         __android_log_print(ANDROID_LOG_DEBUG, TAG, "Unable to update permissions <%p>",
                             _original_addr);
+        if (doLock) unlock();
         return false;
     }
     _original_code.resize(CODE_SIZE);
     memcpy(&_original_code[0], _original_addr, CODE_SIZE);
     ((uint64_t *) _original_addr)[0] = 0xffffff;
     if (!updatePermissions(_original_addr, PROT_READ | PROT_EXEC)) {
+        if (doLock) unlock();
         return true; // this doesn't break our use-case
     }
+    if (doLock) unlock();
     return true;
 }
 
@@ -50,7 +56,7 @@ bool Trampoline::install() {
  * @return true on success
  */
 bool Trampoline::reinstall() {
-    install();
+    install(false);
     unlock();
     return true;
 }
@@ -64,6 +70,7 @@ Trampoline::Trampoline(void *addr, void *hookFun) {
     this->_original_addr = addr;
     this->_hook_addr = hookFun;
     this->_trampoline_lock = new std::mutex();
+    this->infoAvailable = dladdr(addr, &__info);
 }
 
 /**
@@ -94,7 +101,7 @@ bool Trampoline::copyOriginal() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Copy _original_code at %p",
                         _original_addr);
     lock();
-    if(!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)){
+    if (!updatePermissions(_original_addr, PROT_READ | PROT_WRITE | PROT_EXEC)) {
         return false;
     }
     memcpy(_original_addr, &_original_code[0], CODE_SIZE);
@@ -102,6 +109,10 @@ bool Trampoline::copyOriginal() {
     return true;
 }
 
+/**
+ * Locks the trampoline.
+ * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+ */
 void Trampoline::lock() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Lock %p",
                         _original_addr);
@@ -110,11 +121,35 @@ void Trampoline::lock() {
     }
 }
 
+/**
+* Locks the trampoline.
+* Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
+*/
 void Trampoline::unlock() {
     __android_log_print(ANDROID_LOG_DEBUG, TAG, "Unlock %p",
                         _original_addr);
     if (_trampoline_lock != nullptr) {
         (*_trampoline_lock).unlock();
     }
+}
+
+/**
+ * Prints some information about the trampoline
+ */
+void Trampoline::printInfo() {
+    if (infoAvailable == 0) {
+        return;
+    }
+    std::string libName;
+    std::string symbolName;
+    if (__info.dli_fname != nullptr) {
+        libName = __info.dli_fname;
+    }
+    if (__info.dli_sname != nullptr) {
+        symbolName = __info.dli_sname;
+    }
+
+    __android_log_print(ANDROID_LOG_DEBUG, TAG, "Trampoline: <%p> => %s:%s ",
+                        _original_addr, symbolName.c_str(), libName.c_str());
 }
 
