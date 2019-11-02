@@ -67,7 +67,7 @@ Linux ant and Android gradle...
 
 ### Linux
 ```
-ant configure-linux compile-linux
+ant configure-linux compile-linux test-linux
 ```
 artifacts will be in build/libs/
 
