@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ChickenHook" default="help">
 
+    <!-- LINUX -->
     <target name="configure-linux">
         <mkdir dir="build" />
 
@@ -20,6 +21,13 @@
         </exec>
     </target>
 
+    <target name="install-linux">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="install" />
+        </exec>
+    </target>
+
+    <!-- ANDROID -->
     <target name="configure-android">
     </target>
 
@@ -33,6 +41,20 @@
     <target name="test-android">
         <exec dir="." executable="gradle" failonerror="true">
             <arg line="connectedAndroidTest" />
+        </exec>
+    </target>
+
+    <target name="install-android">
+        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="ninja" failonerror="true">
+            <arg line="install" />
+        </exec>
+
+        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="ninja" failonerror="true">
+            <arg line="install" />
+        </exec>
+
+        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="ninja" failonerror="true">
+            <arg line="install" />
         </exec>
     </target>
 
