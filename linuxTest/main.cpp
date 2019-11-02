@@ -26,7 +26,7 @@ int main(int argc, char *arv[]) {
     ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDot);
 
     // 3. check if hook works
-    if (doIt()) {
+    if (doIt()) {  // after applying the hook, we expect false as return value
         return -1;
     }
 

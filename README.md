@@ -18,8 +18,8 @@
 
 ## General
 
-Supported platforms: x86, arm64, x86_64 (experimental)
-
+Supported architectures: x86, arm64, x86_64 (experimental)
+Supported platforms: Android, Linux
 ## Usage
 
 1. Create the hook function (the function that should be called instead of the original function)
