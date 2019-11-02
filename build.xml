@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ChickenHook" default="help">
 
+    <property environment="env" />
+
+
     <!-- LINUX -->
     <target name="configure-linux">
         <mkdir dir="build" />
@@ -45,15 +48,15 @@
     </target>
 
     <target name="install-android">
-        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
 
-        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
 
-        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
     </target>
