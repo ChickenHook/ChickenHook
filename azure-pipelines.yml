@@ -5,6 +5,7 @@
 
 trigger:
   - develop
+  - feature/*
 
 jobs:
 
