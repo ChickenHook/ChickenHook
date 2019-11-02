@@ -52,15 +52,15 @@
         <property name="prop.dist.contents" refid="dist.contents"/>
         <echo>${prop.dist.contents}</echo>
 
-        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
 
-        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
 
-        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
+        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
     </target>
