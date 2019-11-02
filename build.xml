@@ -48,6 +48,10 @@
     </target>
 
     <target name="install-android">
+        <dirset id="dist.contents" dir="${env.ANDROID_HOME}/cmake/"/>
+        <property name="prop.dist.contents" refid="dist.contents"/>
+        <echo>${prop.dist.contents}</echo>
+
         <exec dir="androidTest/.cxx/cmake/debug/x86" executable="${env.ANDROID_HOME}/cmake/3.10.2.4988404/bin/ninja" failonerror="true">
             <arg line="install" />
         </exec>
