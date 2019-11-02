@@ -29,3 +29,13 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 target_include_directories(${PROJECT_NAME} PUBLIC
         include/
         )
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+        CXX_STANDARD 14
+        CXX_STANDARD_REQUIRED YES
+        CMAKE_CXX_EXTENSIONS OFF
+        )
+
+#if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND)
+#    #do something
+#endif ()

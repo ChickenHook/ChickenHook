@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ChickenHook" default="help">
 
-    <target name="configure-linux">
+    <target name="configure">
         <mkdir dir="build" />
 
         <exec dir="build" executable="cmake" failonerror="true">
