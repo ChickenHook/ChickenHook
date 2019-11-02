@@ -3,7 +3,7 @@
 #include <android/log.h>
 #include <dlfcn.h>
 #include <vector>
-#include "chickenHook/chickenhook.h"
+#include "chickenHook/hooking.h"
 #include <fcntl.h>
 #include <iomanip>
 #include <sstream>
@@ -16,10 +16,22 @@ static void *sha256Addr;
 static void *registerNatives;
 
 /**
+ * Function to log messages back to the java call back interface
+ * @param logtext String to be logged
+ */
+void logCallback(const std::string logtext) {
+
+    __android_log_write(ANDROID_LOG_DEBUG, "logCallback", logtext.c_str());
+
+}
+
+
+/**
  * Original function
  */
 void doIt() {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "original functioncalled");
+    ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
 }
 
 /**
@@ -30,8 +42,8 @@ void myDoIt() {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "hooked function called myDoIt");
     // yeah we're inside! But sometimes you want to call the original function also.
     // For this purpose we try to retrieve the corresponding trampoline.
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &doIt, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &doIt, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
         // Now we copy the original function code into the original function
@@ -50,8 +62,8 @@ void myDoIt() {
 FILE *my_fopen(const char *__path, const char *__mode) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "fopen called [-] %s", __path);
     FILE *f;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &fopen, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &fopen, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -70,8 +82,8 @@ int my_open(const char *__path, int __flags, ...) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "open called [-] %s", __path);
 
     int res = -1;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &open, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &open, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -90,8 +102,8 @@ int my_SHA256_Final(unsigned char *md, void *c) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "sha256 called [-] <%p>", md);
 
     int res = -1;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr(sha256Addr, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr(sha256Addr, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -118,8 +130,8 @@ void *my_dlsym(void *__handle, const char *__symbol) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "my_dlsym called [-] <%s>", __symbol);
 
     void *res = nullptr;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &dlsym, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &dlsym, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
@@ -143,8 +155,8 @@ void *my_dlopen(const char *__filename, int __flag) {
 
 
     void *res = nullptr;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &dlopen, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &dlopen, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG,
                             "stringFromJNI",
                             "hooked function call original function");
@@ -232,11 +244,11 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "read called [-] %d", __fd);
 
     int res = -1;
-    Trampoline trampoline;
-    if (ChickenHook::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+        // printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
         trampoline.copyOriginal();
         res = read(__fd, __buf, __count);
         trampoline.reinstall();
@@ -270,9 +282,9 @@ jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *method
     }
 
     int res = -1;
-    Trampoline trampoline;
+    ChickenHook::Trampoline trampoline;
     auto fp = &_JNIEnv::RegisterNatives;
-    if (ChickenHook::getInstance().getTrampolineByAddr(*((void **) &fp), trampoline)) {
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr(*((void **) &fp), trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
                             "hooked function call original function");
         trampoline.copyOriginal();
@@ -302,21 +314,21 @@ static jstring installHooks(
 
     // doIt
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "install hook");
-    ChickenHook::getInstance().hook((void *) &doIt, (void *) &myDoIt);
+    ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDoIt);
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook installed");
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "call function");
     doIt();
 
     // fopen
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook fopen");
-    ChickenHook::getInstance().hook((void *) &fopen, (void *) &my_fopen);
+    ChickenHook::Hooking::getInstance().hook((void *) &fopen, (void *) &my_fopen);
     if (fopen("/proc/self/maps", "r") == nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR NULL !!");
     }
 
     // open
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
-    ChickenHook::getInstance().hook((void *) &open, (void *) &my_open);
+    ChickenHook::Hooking::getInstance().hook((void *) &open, (void *) &my_open);
     if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
     }
@@ -328,7 +340,7 @@ static jstring installHooks(
     } // we should see open and fopen hook was triggered while calling fopen!
 
     // read
-    //ChickenHook::getInstance().hook((void *) &read, (void *) &my_read);
+    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
     // we will see some android read actions ;)
 
     // try to hook function our library doesn't link against...
@@ -336,12 +348,12 @@ static jstring installHooks(
     sha256Addr = dlsym(RTLD_DEFAULT, "SHA256_Final");
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "sha256Addr ADDR %p", sha256Addr);
     if (sha256Addr != nullptr) {
-        ChickenHook::getInstance().hook(sha256Addr, (void *) &my_SHA256_Final);
+        ChickenHook::Hooking::getInstance().hook(sha256Addr, (void *) &my_SHA256_Final);
     }
 
 
     // dl hooking
-    ChickenHook::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
+    ChickenHook::Hooking::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
     //ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
 
 
@@ -405,8 +417,8 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     if (registerNatives != nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "registerNatives ADDR %p",
                             registerNatives);
-        ChickenHook::getInstance().hook(registerNatives,
-                                        (void *) &my_RegisterNatives);
+        ChickenHook::Hooking::getInstance().hook(registerNatives,
+                                                 (void *) &my_RegisterNatives);
     }
 
 

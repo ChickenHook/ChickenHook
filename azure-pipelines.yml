@@ -4,37 +4,56 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/android
 
 trigger:
-- develop
+  - develop
+  - feature/*
 
-pool:
-  vmImage: 'macos-latest'
+jobs:
 
-steps:
-- script: |
-    #!/usr/bin/env bash
-    
-    # Install AVD files
-    echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
-    
-    # Create emulator
-    echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
-    
-    $ANDROID_HOME/emulator/emulator -list-avds
-    
-    echo "Starting emulator"
-    
-    # Start emulator in background
-    nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
-    $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-    
-    $ANDROID_HOME/platform-tools/adb devices
-    
-    echo "Emulator started"
-- task: Gradle@2
-  inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    publishJUnitResults: false
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'connectedAndroidTest'
+  - job: build_for_android_on_mac
+    pool:
+      vmImage: 'macos-latest'
+    steps:
+      - script: |
+          #!/usr/bin/env bash
+
+          # Install AVD files
+          echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-27;google_apis;x86'
+
+          # Create emulator
+          echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-27;google_apis;x86' --force
+
+          $ANDROID_HOME/emulator/emulator -list-avds
+
+          echo "Starting emulator"
+
+          # Start emulator in background
+          nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
+          $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+
+          $ANDROID_HOME/platform-tools/adb devices
+
+          echo "Emulator started"
+      - task: Gradle@2
+        inputs:
+          workingDirectory: ''
+          gradleWrapperFile: 'gradlew'
+          gradleOptions: '-Xmx3072m'
+          publishJUnitResults: false
+          testResultsFiles: '**/TEST-*.xml'
+          tasks: 'connectedAndroidTest'
+
+  - job: build_for_linux
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: Ant@1
+        inputs:
+          workingDirectory: ''
+          buildFile: 'build.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          targets: 'configure-linux compile-linux'
