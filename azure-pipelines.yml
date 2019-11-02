@@ -37,4 +37,4 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          tasks: 'configure-linux compile-linux'
+          targets: 'configure-linux compile-linux'
