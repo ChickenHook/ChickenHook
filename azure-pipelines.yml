@@ -79,3 +79,22 @@ jobs:
         inputs:
           pathtoPublish: 'artifactsOut'
           artifactName: 'ChickenHook'
+
+  - job: build_for_mac
+      pool:
+        vmImage: 'macos-latest'
+      steps:
+        - task: Ant@1
+          inputs:
+            workingDirectory: ''
+            buildFile: 'build.xml'
+            javaHomeOption: 'JDKVersion'
+            jdkVersionOption: '1.8'
+            jdkArchitectureOption: 'x64'
+            publishJUnitResults: true
+            testResultsFiles: '**/TEST-*.xml'
+            targets: 'configure-mac compile-mac install-mac'
+        - task: PublishBuildArtifacts@1
+          inputs:
+            pathtoPublish: 'artifactsOut'
+            artifactName: 'ChickenHook'

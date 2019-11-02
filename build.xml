@@ -35,13 +35,24 @@
         <mkdir dir="build" />
 
         <exec dir="build" executable="cmake" failonerror="true">
-            <arg line="../src/" />
+            <arg line="../" />
         </exec>
     </target>
 
     <target name="compile-mac">
         <exec dir="build" executable="make" failonerror="true">
             <arg line="-j8" />
+        </exec>
+    </target>
+
+    <target name="test-mac">
+        <exec dir="build" executable="./linuxTest/linuxTest" failonerror="true">
+        </exec>
+    </target>
+
+    <target name="install-mac">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="install" />
         </exec>
     </target>
 
