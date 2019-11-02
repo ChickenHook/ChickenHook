@@ -18,13 +18,13 @@
 
 namespace ChickenHook {
 
-/**
- * The chickenhook library.
- *
- * This framework is build for hooking native functions defined in libraries loaded in our process.
- * ChickenHook uses sigaction for managing jumps from the function to be hooked to our new function.
- * Therefore we write invalid code into the function to be hooked and wait for our registered signal handler.
- */
+    /**
+     * The chickenhook library.
+     *
+     * This framework is build for hooking native functions defined in libraries loaded in our process.
+     * ChickenHook uses sigaction for managing jumps from the function to be hooked to our new function.
+     * Therefore we write invalid code into the function to be hooked and wait for our registered signal handler.
+     */
     class Hooking {
 
     public:
@@ -58,7 +58,7 @@ namespace ChickenHook {
         * If set, the library will call this function with logging and debugging text. If not set, or set to NULL, log
         * messages will be silently discarded.
         */
-        void setLoggingCallback(void (*logCallback)(const std::string logtext));
+        void setLoggingCallback(void (*logCallback)(const std::string));
 
     private:
 

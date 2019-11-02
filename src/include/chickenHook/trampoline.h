@@ -8,6 +8,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <cstring>
+#include <dlfcn.h>
 
 #include "logging.h"
 
@@ -23,11 +24,11 @@ namespace ChickenHook {
 #error "UNSUPPORTED"
 #endif
 
-/**
- * Represents a trampoline that will forward the controlflow from the function to be hooked into our code.
- *
- * This class contains all neccessary functions to work with a trampoline.
- */
+    /**
+     * Represents a trampoline that will forward the controlflow from the function to be hooked into our code.
+     *
+     * This class contains all neccessary functions to work with a trampoline.
+     */
     class Trampoline {
     public:
         /**
@@ -47,7 +48,7 @@ namespace ChickenHook {
          * Installs the trampoline at the given address
          * @return true on success
          */
-        bool install();
+        bool install(bool doLock = true);
 
         bool reinstall();
 
@@ -80,12 +81,17 @@ namespace ChickenHook {
         */
         void unlock();
 
+        /**
+         * Prints some information about the trampoline
+         */
+        void printInfo();
+
     private:
         void *_original_addr;
         void *_hook_addr;
         std::vector<uint8_t> _original_code;
         std::mutex *_trampoline_lock{};
-
+        Dl_info __info;
+        int infoAvailable = 0;
     };
-
 }

@@ -46,6 +46,10 @@ namespace ChickenHook {
      */
     void log(const char *CFormatString, ...) {
 
+        if (CFormatString == nullptr) {
+            return;
+        }
+
         if (logFunction == NULL) {
             return;
         }
