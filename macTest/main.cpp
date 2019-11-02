@@ -38,9 +38,8 @@ std::string GetStdoutFromCommand(std::string cmd) {
 int main(int argc, char *arv[]) {
     std::cout << "WELCOME TO MAC CHICKENHOOK TESTS" << std::endl;
 
-
     std::string vmmap = GetStdoutFromCommand("vmmap --wide " + std::to_string(getpid()));
-    std::cout << vmmap;
+    logCallback(vmmap);
 
     // 1. set logging callback
     ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
