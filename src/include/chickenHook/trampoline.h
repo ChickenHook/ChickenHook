@@ -7,6 +7,8 @@
 #include <mutex>
 #include <sys/mman.h>
 #include <unistd.h>
+#include <cstring>
+
 #include "logging.h"
 
 namespace ChickenHook {

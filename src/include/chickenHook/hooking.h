@@ -5,7 +5,8 @@
 #pragma once
 
 #include <stdio.h>
-#include <bits/sysconf.h>
+#include <unistd.h>
+#include <signal.h>
 #include <sys/mman.h>
 #include <vector>
 #include <ucontext.h>
