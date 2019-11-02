@@ -5,13 +5,13 @@
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
 [win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[win-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[win-build]: https://dev.azure.com/sascharoth/ChickenHook/_build?definitionId=1
 
 [macOS-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[macOS-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[macOS-build]: https://dev.azure.com/sascharoth/ChickenHook/_build?definitionId=1
 
 [linux-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[linux-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[linux-build]: https://dev.azure.com/sascharoth/ChickenHook/_build?definitionId=1
 
 # ChickenHook 
 <img src="./logo.png" alt="ChickenHook logo" height="200" width="200" />
