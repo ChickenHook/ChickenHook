@@ -84,7 +84,7 @@ jobs:
       pool:
         vmImage: 'macos-latest'
       steps:
-        - task: Ant@1
+        - task: Ant@2
           inputs:
             workingDirectory: ''
             buildFile: 'build.xml'
@@ -94,7 +94,7 @@ jobs:
             publishJUnitResults: true
             testResultsFiles: '**/TEST-*.xml'
             targets: 'configure-mac compile-mac install-mac'
-        - task: PublishBuildArtifacts@1
+        - task: PublishBuildArtifacts@2
           inputs:
             pathtoPublish: 'artifactsOut'
             artifactName: 'ChickenHook'
