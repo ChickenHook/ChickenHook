@@ -4,12 +4,10 @@
 #include "chickenHook/trampoline.h"
 #include "chickenHook/logging.h"
 
-bool doIt() {
-    return true;
-}
 
-bool myDot() {
-    return false;
+bool myFread() {
+    std::cout << "CHICKEN (fread) HOOKED! RIPPING FEATHERS!" << std::endl;
+    return true;
 }
 
 void logCallback(const std::string logtext) {
@@ -38,25 +36,25 @@ std::string GetStdoutFromCommand(std::string cmd) {
 int main(int argc, char *arv[]) {
     std::cout << "WELCOME TO MAC CHICKENHOOK TESTS" << std::endl;
 
-    std::string vmmap = GetStdoutFromCommand("vmmap --wide " + std::to_string(getpid()));
-    logCallback(vmmap);
+//    For debugging purposes
+//    std::string vmmap = GetStdoutFromCommand("vmmap --wide " + std::to_string(getpid()));
+//    logCallback(vmmap);
 
     // 1. set logging callback
     ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
 
-    // 2. install a hook
-    ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDot);
+    // 2. install a hook on C fread()
+    ChickenHook::Hooking::getInstance().hook((void *) &fread, (void *) &myFread);
 
-    // 3. check if hook works
-    if (doIt()) {  // after applying the hook, we expect false as return value
+
+    unsigned char buffer[10];
+    FILE *ptr;
+
+    ptr = fopen("test.bin","rb");
+
+    // now call read to see if it was hooked successfully
+    if(!fread(buffer,sizeof(buffer),1,ptr)){
         return -1;
-    }
-
-    // lets check it in a loop
-    for (int i = 0; i < 10; i++) {
-        if (doIt()) {  // after applying the hook, we expect false as return value
-            return -1;
-        }
     }
 
     return 0;
