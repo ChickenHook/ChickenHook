@@ -28,7 +28,7 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
-      - task: Ant@2
+      - task: Ant@1
         inputs:
           workingDirectory: ''
           buildFile: 'build.xml'
