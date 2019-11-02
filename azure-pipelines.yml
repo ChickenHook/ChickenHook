@@ -28,7 +28,7 @@ jobs:
       vmImage: 'ubuntu-latest'
 
     steps:
-      - task: configure-linux compile-linux
+      - task: Ant@2
         inputs:
           workingDirectory: ''
           buildFile: 'build.xml'
@@ -37,3 +37,4 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
+          task: 'configure-linux compile-linux'
