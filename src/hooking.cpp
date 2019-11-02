@@ -45,7 +45,7 @@ namespace ChickenHook {
      * @param arg ucontext
      */
     static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
-        log("HookSignalHandler", "Caught segfault at address <%p>", si->si_addr);
+        log("Caught segfault at address <%p>", si->si_addr);
 
         auto *p = (ucontext_t *) arg;
         if (trampolines.empty()) {
@@ -55,10 +55,10 @@ namespace ChickenHook {
         // search the corresponding trampoline
         for (auto trampoline : trampolines) {
             if (trampoline.getOriginal() == si->si_addr) {
-                log("HookSignalHandler", "Found hook <%p>", si->si_addr);
+                log("Found hook <%p>", si->si_addr);
                 void *hook = trampoline.getHook();
                 auto hookFun = (void (*)()) hook;
-                log("HookSignalHandler", "Overwrite pc");
+                log("Overwrite pc");
                 // now set the pc to our hook function
 #if defined(__APPLE__) && (__x86_64__)
                 p->uc_mcontext->__ss.__rip = reinterpret_cast<register_t>(hookFun);
@@ -78,7 +78,7 @@ namespace ChickenHook {
             }
 
         }
-        log("HookSignalHandler", "Continue execution");
+        log("Continue execution");
     }
 
     /**

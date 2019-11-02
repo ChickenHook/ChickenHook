@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ChickenHook" default="help">
 
+    <property environment="env" />
+
+
+    <!-- LINUX -->
     <target name="configure-linux">
         <mkdir dir="build" />
 
         <exec dir="build" executable="cmake" failonerror="true">
-            <arg line="../src/" />
+            <arg line="../" />
         </exec>
     </target>
 
@@ -15,6 +19,18 @@
         </exec>
     </target>
 
+    <target name="test-linux">
+        <exec dir="build" executable="./linuxTest/linuxTest" failonerror="true">
+        </exec>
+    </target>
+
+    <target name="install-linux">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="install" />
+        </exec>
+    </target>
+
+    <!-- MacOS -->
     <target name="configure-mac">
         <mkdir dir="build" />
 
@@ -29,12 +45,51 @@
         </exec>
     </target>
 
+    <!-- ANDROID -->
+    <target name="configure-android">
+    </target>
+
+    <target name="compile-android">
+        <exec dir="." executable="gradle" failonerror="true">
+            <arg line="assembleDebug" />
+        </exec>
+    </target>
+
+
+    <target name="test-android">
+        <exec dir="." executable="gradle" failonerror="true">
+            <arg line="connectedAndroidTest" />
+        </exec>
+    </target>
+
+    <target name="install-android">
+        <dirset id="dist.contents" dir="${env.ANDROID_HOME}/cmake/"/>
+        <property name="prop.dist.contents" refid="dist.contents"/>
+        <echo>${prop.dist.contents}</echo>
+
+        <exec dir="androidTest/.cxx/cmake/debug/x86" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
+            <arg line="install" />
+        </exec>
+
+        <exec dir="androidTest/.cxx/cmake/debug/x86_64" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
+            <arg line="install" />
+        </exec>
+
+        <exec dir="androidTest/.cxx/cmake/debug/arm64-v8a" executable="${env.ANDROID_HOME}/cmake/3.6.4111459/bin/ninja" failonerror="true">
+            <arg line="install" />
+        </exec>
+    </target>
+
     <target name="help">
         <echo message="Usage:" />
         <echo message="configure-linux - Configures the linux build" />
         <echo message="compile-linux - Compiles the chickenhook static library for linux" />
+        <echo message="test-linux - Tests chickenhook for linux" />
         <echo message="configure-mac - Configures the MacOS build" />
         <echo message="compile-mac - Compiles the chickenhook static library for MacOS" />
+        <echo message="configure-android - Configures the android build" />
+        <echo message="compile-android - Compiles the chickenhook static library for android" />
+        <echo message="test-android - Tests chickenhook for android" />
     </target>
 
 </project>

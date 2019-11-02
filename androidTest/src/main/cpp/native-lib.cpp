@@ -31,7 +31,6 @@ void logCallback(const std::string logtext) {
  */
 void doIt() {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "original functioncalled");
-    ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
 }
 
 /**
@@ -409,6 +408,8 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     if (vm->GetEnv((void **) (&env), JNI_VERSION_1_4) != JNI_OK) {
         return -1;
     }
+
+    ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
 
     // hook register natives
     registerNatives = dlsym(

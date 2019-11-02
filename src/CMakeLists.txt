@@ -30,8 +30,17 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         include/
         )
 
+#install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD 14
         CXX_STANDARD_REQUIRED YES
         CMAKE_CXX_EXTENSIONS OFF
         )
+
+
+install(TARGETS ${PROJECT_NAME}
+        ARCHIVE
+            DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
+            COMPONENT Libraries)
+install(DIRECTORY include/ DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/include)
