@@ -5,7 +5,7 @@
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
 [win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[win-build]:https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[win-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
 
 [macOS-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
 [macOS-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1

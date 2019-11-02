@@ -93,7 +93,7 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          targets: 'configure-mac compile-mac install-mac'
+          targets: 'configure-mac compile-mac test-mac install-mac'
       - task: PublishBuildArtifacts@1
         inputs:
           pathtoPublish: 'artifactsOut'

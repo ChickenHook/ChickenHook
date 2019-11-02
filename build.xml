@@ -46,7 +46,7 @@
     </target>
 
     <target name="test-mac">
-        <exec dir="build" executable="./linuxTest/linuxTest" failonerror="true">
+        <exec dir="build" executable="./macTest/macTest" failonerror="true">
         </exec>
     </target>
 
