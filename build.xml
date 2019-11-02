@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ChickenHook" default="help">
 
-    <target name="configure">
+    <target name="configure-linux">
         <mkdir dir="build" />
 
         <exec dir="build" executable="cmake" failonerror="true">
@@ -13,13 +13,28 @@
         <exec dir="build" executable="make" failonerror="true">
             <arg line="-j8" />
         </exec>
+    </target>
 
+    <target name="configure-mac">
+        <mkdir dir="build" />
+
+        <exec dir="build" executable="cmake" failonerror="true">
+            <arg line="../src/" />
+        </exec>
+    </target>
+
+    <target name="compile-mac">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="-j8" />
+        </exec>
     </target>
 
     <target name="help">
         <echo message="Usage:" />
         <echo message="configure-linux - Configures the linux build" />
         <echo message="compile-linux - Compiles the chickenhook static library for linux" />
+        <echo message="configure-mac - Configures the MacOS build" />
+        <echo message="compile-mac - Compiles the chickenhook static library for MacOS" />
     </target>
 
 </project>
