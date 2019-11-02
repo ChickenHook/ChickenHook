@@ -4,17 +4,35 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/android
 
 trigger:
-- develop
+  - develop
 
-pool:
-  vmImage: 'macos-latest'
+jobs:
 
-steps:
-- task: Gradle@2
-  inputs:
-    workingDirectory: ''
-    gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m'
-    publishJUnitResults: false
-    testResultsFiles: '**/TEST-*.xml'
-    tasks: 'connectedAndroidTest'
+  - job: build_for_android_on_mac
+    pool:
+      vmImage: 'macos-latest'
+
+    steps:
+      - task: Gradle@2
+        inputs:
+          workingDirectory: ''
+          gradleWrapperFile: 'gradlew'
+          gradleOptions: '-Xmx3072m'
+          publishJUnitResults: false
+          testResultsFiles: '**/TEST-*.xml'
+          tasks: 'connectedAndroidTest'
+
+  - job: build_for_linux
+    pool:
+      vmImage: 'ubuntu-latest'
+
+    steps:
+      - task: configure-linux compile-linux
+        inputs:
+          workingDirectory: ''
+          buildFile: 'build.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
