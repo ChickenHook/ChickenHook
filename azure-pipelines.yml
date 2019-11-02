@@ -42,15 +42,15 @@ jobs:
           testResultsFiles: '**/TEST-*.xml'
           tasks: 'connectedAndroidTest'
       - task: Ant@1
-          inputs:
-            workingDirectory: ''
-            buildFile: 'build.xml'
-            javaHomeOption: 'JDKVersion'
-            jdkVersionOption: '1.8'
-            jdkArchitectureOption: 'x64'
-            publishJUnitResults: true
-            testResultsFiles: '**/TEST-*.xml'
-            targets: 'install-android'
+        inputs:
+          workingDirectory: ''
+          buildFile: 'build.xml'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          targets: 'install-android'
 
   - job: build_for_linux
     pool:
