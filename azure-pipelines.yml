@@ -9,9 +9,9 @@ trigger:
 
 jobs:
 
-  - job: build_for_android_on_linux
+  - job: build_for_android_on_mac
     pool:
-      vmImage: 'ubuntu-latest'
+      vmImage: 'macos-latest'
     steps:
       - script: |
           #!/usr/bin/env bash
@@ -41,6 +41,11 @@ jobs:
           publishJUnitResults: false
           testResultsFiles: '**/TEST-*.xml'
           tasks: 'connectedAndroidTest'
+
+  - job: build_for_android_on_linux
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
       - task: Ant@1
         inputs:
           workingDirectory: ''
@@ -50,7 +55,7 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          targets: 'install-android'
+          targets: 'configure-android compile-android install-android'
 
   - job: build_for_linux
     pool:
