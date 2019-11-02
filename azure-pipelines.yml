@@ -9,9 +9,9 @@ trigger:
 
 jobs:
 
-  - job: build_for_android_on_mac
+  - job: build_for_android_on_linux
     pool:
-      vmImage: 'macos-latest'
+      vmImage: 'ubuntu-latest'
     steps:
       - script: |
           #!/usr/bin/env bash
