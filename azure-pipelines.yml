@@ -84,6 +84,15 @@ jobs:
     pool:
       vmImage: 'macos-latest'
     steps:
+      - script: |
+          #!/usr/bin/env bash
+
+          echo "Installing apache ant..."
+          brew install ant"
+
+          echo "Installing ant-contrib..."
+          brew install ant-contrib
+          "
       - task: Ant@1
         inputs:
           workingDirectory: ''
