@@ -28,7 +28,7 @@ Supported platforms: Android, Linux
 
 * ant
 
-### Linux
+### Linux and MacOS
 * cmake
 * make
 
@@ -93,6 +93,12 @@ Use as an Android Studio project or:
 ```
 ant configure-android compile-android test-android
 ```
+
+### MacOS
+```
+ant configure-mac compile-mac test-mac install-mac
+```
+artifacts will be in ./artifactsOut
 
 ## Include in your Project
 
