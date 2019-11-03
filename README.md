@@ -2,18 +2,17 @@
 |---|:-----:|
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
-|![Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]| 
 
-[comment]: <> [win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[comment]: <> [win-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
+[//]: [Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]
+
+[//]: [win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
+[//]: [win-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
 
 [macOS-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
 [macOS-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
 
 [linux-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
 [linux-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
-
-[win-build]: not supported yet
 
 # ChickenHook 
 <img src="./logo.png" alt="ChickenHook logo" height="200" width="200" />
