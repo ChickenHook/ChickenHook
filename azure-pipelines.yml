@@ -86,14 +86,12 @@ jobs:
     steps:
       - script: |
           #!/usr/bin/env bash
+          echo 'Installing apache ant...'
+          brew install ant
 
-          echo "Installing apache ant..."
-          brew install ant"
-
-          echo "Installing ant-contrib..."
+          echo 'Installing ant-contrib...'
           brew install ant-contrib
-          "
-      - task: Ant@1
+    - task: Ant@1
         inputs:
           workingDirectory: ''
           buildFile: 'build.xml'
