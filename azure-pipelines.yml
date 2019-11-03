@@ -91,7 +91,7 @@ jobs:
 
           echo 'Installing ant-contrib...'
           brew install ant-contrib
-    - task: Ant@1
+      - task: Ant@1
         inputs:
           workingDirectory: ''
           buildFile: 'build.xml'
