@@ -30,7 +30,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         include/
         )
 
-#install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/)
+set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 
 
 install(TARGETS ${PROJECT_NAME}
