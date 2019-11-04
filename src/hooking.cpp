@@ -44,7 +44,7 @@ namespace ChickenHook {
      * @param si signal information
      * @param arg ucontext
      */
-    static void trampoline_receiver(int signal, siginfo_t *si, void *arg) {
+    static void trampoline_receiver(int, siginfo_t *si, void *arg) {
         log("Caught segfault at address <%p>", si->si_addr);
 
         auto *p = (ucontext_t *) arg;
@@ -69,6 +69,7 @@ namespace ChickenHook {
 #else
 #error "UNSUPPORTED"
 #endif
+                si->si_signo = SIGCONT;
             }
 
         }
