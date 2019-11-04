@@ -31,7 +31,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
         )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 
 
 
