@@ -26,7 +26,7 @@ std::string GetStdoutFromCommand(std::string cmd) {
     stream = popen(cmd.c_str(), "r");
     if (stream) {
         while (!feof(stream))
-            if (fgets(buffer, max_buffer, stream) != NULL) data.append(buffer);
+            if (fgets(buffer, max_buffer, stream) != nullptr) data.append(buffer);
         pclose(stream);
     }
     return data;
