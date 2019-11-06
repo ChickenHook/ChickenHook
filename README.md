@@ -1,17 +1,18 @@
 |   | Build & Test |
 |---|:-----:|
-|![Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build]| 
 |![macOS](docs/res/apple_med.png) **macOS**|[![Build & Test][macOS-build-badge]][macOS-build]| 
 |![Linux](docs/res/linux_med.png) **Linux**|[![Build & Test][linux-build-badge]][linux-build]|
 
-[win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[win-build]:https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+<!--- [Win](docs/res/win_med.png) **Windows**|[![Build & Test][win-build-badge]][win-build] --->
+
+<!--- [win-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook --->
+<!--- [win-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1 --->
 
 [macOS-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[macOS-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[macOS-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
 
 [linux-build-badge]: https://dev.azure.com/sascharoth/sascharoth/_apis/build/status/ChickenHook.chickenhook
-[linux-build]: https://dev.azure.com/sascharoth/sascharoth/_build/latest?definitionId=1
+[linux-build]: https://dev.azure.com/ChickenHook/ChickenHook/_build?definitionId=1
 
 # ChickenHook 
 <img src="./logo.png" alt="ChickenHook logo" height="200" width="200" />
@@ -27,7 +28,7 @@ Supported platforms: Android, Linux
 
 * ant
 
-### Linux
+### Linux and MacOS
 * cmake
 * make
 
@@ -79,7 +80,7 @@ example here shows a hook function for libc's open
 
 ## Build
 
-Currently ChickenHook can be build for linux and android.
+Currently ChickenHook can be build for Linux and Android and MacOs.
 
 ### Linux
 ```
@@ -92,6 +93,12 @@ Use as an Android Studio project or:
 ```
 ant configure-android compile-android test-android
 ```
+
+### MacOS
+```
+ant configure-mac compile-mac test-mac install-mac
+```
+artifacts will be in ./artifactsOut
 
 ## Include in your Project
 

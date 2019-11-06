@@ -1,5 +1,5 @@
+#include <chickenHook/hooking.h>
 
-#include "chickenHook/chickenhook.h"
 
 
 int my_open(const char *__path, int __flags,

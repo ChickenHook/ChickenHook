@@ -30,6 +30,32 @@
         </exec>
     </target>
 
+    <!-- MacOS -->
+    <target name="configure-mac">
+        <mkdir dir="build" />
+
+        <exec dir="build" executable="cmake" failonerror="true">
+            <arg line="../" />
+        </exec>
+    </target>
+
+    <target name="compile-mac">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="-j8" />
+        </exec>
+    </target>
+
+    <target name="test-mac">
+        <exec dir="build" executable="./macTest/macTest" failonerror="true">
+        </exec>
+    </target>
+
+    <target name="install-mac">
+        <exec dir="build" executable="make" failonerror="true">
+            <arg line="install" />
+        </exec>
+    </target>
+
     <!-- ANDROID -->
     <target name="configure-android">
     </target>
@@ -68,11 +94,14 @@
     <target name="help">
         <echo message="Usage:" />
         <echo message="configure-linux - Configures the linux build" />
-        <echo message="compile-linux - Compiles the chickenhook static library for linux" />
-        <echo message="test-linux - Tests chickenhook for linux" />
+        <echo message="compile-linux - Compiles the ChickenHook static library for linux" />
+        <echo message="test-linux - Tests ChickenHook for linux" />
+        <echo message="configure-mac - Configures the MacOS build" />
+        <echo message="compile-mac - Compiles the ChickenHook static library for MacOS" />
+        <echo message="test-mac - Tests ChickenHook for MacOs" />
         <echo message="configure-android - Configures the android build" />
-        <echo message="compile-android - Compiles the chickenhook static library for android" />
-        <echo message="test-android - Tests chickenhook for android" />
+        <echo message="compile-android - Compiles the ChickenHook static library for android" />
+        <echo message="test-android - Tests ChickenHook for android" />
     </target>
 
 </project>
