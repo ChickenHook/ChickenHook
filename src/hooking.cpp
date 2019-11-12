@@ -54,7 +54,9 @@ namespace ChickenHook {
 
         // search the corresponding trampoline
         for (auto trampoline : trampolines) {
-            if (trampoline.getOriginal() == si->si_addr) {
+            if (trampoline.getOriginal() >= si->si_addr ||
+                trampoline.getOriginal() + CODE_SIZE <
+                si->si_addr) { // there is a race while install / reinstall the hook. The signal could be thrown in the full area of hook size.
                 log("Found hook <%p>", si->si_addr);
                 void *hook = trampoline.getHook();
                 auto hookFun = (void (*)()) hook;
