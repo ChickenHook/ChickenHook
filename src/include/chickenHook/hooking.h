@@ -9,7 +9,13 @@
 #include <signal.h>
 #include <sys/mman.h>
 #include <vector>
+
+#if defined(__APPLE__) && defined(__MACH__)
+#include <sys/ucontext.h>
+#else
 #include <ucontext.h>
+#endif
+
 #include <setjmp.h>
 
 #include "trampoline.h"

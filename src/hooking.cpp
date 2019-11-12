@@ -60,6 +60,11 @@ namespace ChickenHook {
                 auto hookFun = (void (*)()) hook;
                 log("Overwrite pc");
                 // now set the pc to our hook function
+#if defined(__APPLE__) && (__x86_64__)
+                p->uc_mcontext->__ss.__rip = reinterpret_cast<register_t>(hookFun);
+#elif defined(__APPLE__) && (__i386__)
+                p->uc_mcontext->__ss.__eip = reinterpret_cast<register_t>(hookFun);
+#else
 #ifdef __i386__
                 p->uc_mcontext.gregs[REG_EIP] = reinterpret_cast<greg_t>(hookFun);
 #elif __aarch64__
@@ -68,6 +73,7 @@ namespace ChickenHook {
                 p->uc_mcontext.gregs[REG_RIP] = reinterpret_cast<greg_t>(hookFun);
 #else
 #error "UNSUPPORTED"
+#endif
 #endif
                 si->si_signo = SIGCONT;
             }
