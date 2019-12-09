@@ -31,11 +31,6 @@ namespace ChickenHook {
         return true;
     }
 
-    extern "C" void doCrash() {
-        void (*test)() = nullptr;
-        test();
-    }
-
     std::vector<uint8_t> generateJump(void *src, void *dest) {
         std::vector<uint8_t> jump;
 
@@ -52,7 +47,25 @@ namespace ChickenHook {
         memcpy(&jump[1], &relativeAddr, 4);
 
 #elif __aarch64__
+        // aarch64
+        jump.resize(TRAMPOLINE_SIZE);
+        //const char * jumpInst="\x49\x00\x00\x58\x20\x01\x1f\xd6";
+        jump[0]=0x49;
+        jump[1]=0x00;
+        jump[2]=0x00;
+        jump[3]=0x58;
+        jump[4]=0x20;
+        jump[5]=0x01;
+        jump[6]=0x1f;
+        jump[7]=0xd6;
 
+        int insOff = TRAMPOLINE_SIZE;
+        uint64_t absoluteAddr=(uint64_t) dest;
+
+        log("Calculate relative jump addr <%d> - src <%p> dest <%p>", absoluteAddr, src,
+            dest);
+
+        memcpy(&jump[8], &absoluteAddr, 8);
 #elif __x86_64__
         // x86_64
         jump.resize(TRAMPOLINE_SIZE);

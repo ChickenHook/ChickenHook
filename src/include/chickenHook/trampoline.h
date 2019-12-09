@@ -27,7 +27,7 @@ namespace ChickenHook {
 
     // TRAMPOLINE SIZE
 #ifdef __aarch64__
-#define TRAMPOLINE_SIZE 5
+#define TRAMPOLINE_SIZE 16
 #elif __i386__
 #define TRAMPOLINE_SIZE 5
 #elif __x86_64__
