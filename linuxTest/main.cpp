@@ -5,10 +5,14 @@
 #include "chickenHook/logging.h"
 
 bool doIt() {
+    std::cout << "This is doIt" << std::endl;
+
     return true;
 }
 
 bool myDot() {
+    std::cout << "This is myDoit haw haw!" << std::endl;
+
     return false;
 }
 
