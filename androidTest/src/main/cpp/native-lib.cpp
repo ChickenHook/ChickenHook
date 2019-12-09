@@ -92,6 +92,8 @@ int my_open(const char *__path, int __flags, ...) {
             trampoline.copyOriginal();
             res = open(__path, __flags);
             trampoline.reinstall();
+        } else {
+            res = _open(__path, __flags);
         }
         return res;
     } else {
@@ -333,6 +335,9 @@ static jstring installHooks(
 
     // open
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
+    if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
+        __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!!!! FILE DESCRIPTOR <=0 !!!!");
+    }
     ChickenHook::Hooking::getInstance().hook((void *) &open, (void *) &my_open);
     if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
