@@ -3,6 +3,7 @@
 //
 
 #include "chickenHook/logging.h"
+#include "instsHelper/x86_insts_helper.h"
 
 namespace ChickenHook {
 
