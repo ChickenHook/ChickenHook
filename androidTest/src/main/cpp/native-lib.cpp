@@ -45,13 +45,19 @@ void myDoIt() {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &doIt, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        // Now we copy the original function code into the original function
-        trampoline.copyOriginal();
-        // We call the function
-        doIt();
-        // afterwards we install our trampoline again
-        trampoline.reinstall();
-        // thats it!
+        void (*_doit)() =(void (*)()) trampoline.getRealCallAddr();
+        if (_doit == nullptr) {
+            // Now we copy the original function code into the original function
+            trampoline.copyOriginal();
+            // We call the function
+            doIt();
+            // afterwards we install our trampoline again
+            trampoline.reinstall();
+            // thats it!
+        } else {
+            _doit();
+        }
+
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function cannot call original function");
@@ -65,10 +71,15 @@ FILE *my_fopen(const char *__path, const char *__mode) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &fopen, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
+        auto _fopen = (FILE *(*)(const char *__path, const char *__mode)) trampoline.getRealCallAddr();
+        if (_fopen == nullptr) {
+            trampoline.copyOriginal();
+            f = fopen(__path, __mode);
+            trampoline.reinstall();
+        } else {
+            f = _fopen(__path, __mode);
+        }
 
-        trampoline.copyOriginal();
-        f = fopen(__path, __mode);
-        trampoline.reinstall();
         return f;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
@@ -86,8 +97,8 @@ int my_open(const char *__path, int __flags, ...) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
-        int (*_open)(const char *, int, ...) =(int (*)(const char *, int,
-                                                       ...)) trampoline.getRealCallAddr();
+        auto _open = (int (*)(const char *, int,
+                              ...)) trampoline.getRealCallAddr();
         if (_open == nullptr) {
             trampoline.copyOriginal();
             res = open(__path, __flags);
@@ -111,16 +122,26 @@ int my_SHA256_Final(unsigned char *md, void *c) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr(sha256Addr, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
+        auto _sha256_Final = (int
+        (*)(unsigned char *md, void *c)) trampoline.getRealCallAddr();
 
-        trampoline.copyOriginal();
-        int ((*my_SHA256_Final_FUN)(unsigned char *, void *)) =(int (*)(unsigned char *,
-                                                                        void *)) (sha256Addr);
+        auto my_SHA256_Final_FUN = (int (*)(unsigned char *,
+                                            void *)) (sha256Addr);
+
+        if (_sha256_Final == nullptr) {
+            trampoline.copyOriginal();
+        } else {
+            my_SHA256_Final_FUN = _sha256_Final;
+        }
+
         res = my_SHA256_Final_FUN(md, c);
         md[0] = 'H';
         md[1] = 'O';
         md[2] = 'O';
         md[3] = 'K';
-        trampoline.reinstall();
+        if (_sha256_Final == nullptr) {
+            trampoline.reinstall();
+        }
         return res;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
@@ -139,10 +160,16 @@ void *my_dlsym(void *__handle, const char *__symbol) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &dlsym, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
+        auto _dlsym = (void *(*)(void *__handle,
+                                 const char *__symbol)) trampoline.getRealCallAddr();
+        if (_dlsym == nullptr) {
+            trampoline.copyOriginal();
+            res = dlsym(__handle, __symbol);
+            trampoline.reinstall();
+        } else {
+            res = _dlsym(__handle, __symbol);
+        }
 
-        trampoline.copyOriginal();
-        res = dlsym(__handle, __symbol);
-        trampoline.reinstall();
         return res;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
@@ -330,7 +357,7 @@ static jstring installHooks(
         jobject /* this */) {
 
     // read
-    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
+    //ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
     // we will see some android read actions ;)
 
     // open
@@ -343,7 +370,7 @@ static jstring installHooks(
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
     }
 
-/*
+
     // doIt
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "install hook");
     ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDoIt);
@@ -381,7 +408,7 @@ static jstring installHooks(
     ChickenHook::Hooking::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
     //ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
 
-*/
+
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
