@@ -13,7 +13,7 @@ namespace ChickenHook {
     Hooking &Hooking::getInstance() {
         {
             static Hooking instance; // Guaranteed to be destroyed.
-            instance.init();
+            //instance.init();
             // Instantiated on first use.
             return instance;
         }
@@ -30,7 +30,7 @@ namespace ChickenHook {
         log("Inject trampoline into <%p> with hookfun <%p>", addr, callback);
         Trampoline trampoline(addr, callback);
         trampoline.install();
-        trampolines.push_back(trampoline);
+        trampolines.push_back(std::move(trampoline));
         return true;
     }
 

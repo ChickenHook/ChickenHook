@@ -86,9 +86,13 @@ int my_open(const char *__path, int __flags, ...) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
 
-        trampoline.copyOriginal();
-        res = open(__path, __flags);
-        trampoline.reinstall();
+        int (*_open)(const char *, int, ...) =(int (*)(const char *, int,
+                                                       ...)) trampoline.getRealCallAddr();
+        if (_open == nullptr) {
+            trampoline.copyOriginal();
+            res = open(__path, __flags);
+            trampoline.reinstall();
+        }
         return res;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
@@ -247,10 +251,17 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        // printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
-        trampoline.copyOriginal();
-        res = read(__fd, __buf, __count);
-        trampoline.reinstall();
+        //printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+
+        ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
+                                                            size_t)) trampoline.getRealCallAddr();
+        if (_read == nullptr) {
+            trampoline.copyOriginal();
+            res = read(__fd, __buf, __count);
+            trampoline.reinstall();
+        } else {
+            res = _read(__fd, __buf, __count);
+        }
         return res;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
@@ -282,18 +293,23 @@ jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *method
 
     int res = -1;
     ChickenHook::Trampoline trampoline;
-    auto fp = &_JNIEnv::RegisterNatives;
-    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr(*((void **) &fp), trampoline)) {
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr(registerNatives, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
                             "hooked function call original function");
-        trampoline.copyOriginal();
 
         jint
         (*fun)(JNIEnv *, jclass, const JNINativeMethod *, jint) = (jint (*)(JNIEnv *env, jclass,
                                                                             const JNINativeMethod *,
-                                                                            jint)) registerNatives;
-        res = fun(env, clazz, newMethods, size);
-        trampoline.reinstall();
+                                                                            jint)) trampoline.getRealCallAddr();
+        if (fun == nullptr) {
+            fun = (jint (*)(JNIEnv *, jclass, const JNINativeMethod *, jint)) registerNatives;
+            trampoline.copyOriginal();
+            res = fun(env, clazz, newMethods, size);
+            trampoline.reinstall();
+        } else {
+            res = fun(env, clazz, newMethods, size);
+
+        }
         return res;
     } else {
         __android_log_print(ANDROID_LOG_DEBUG, "my_RegisterNatives",
@@ -311,6 +327,18 @@ static jstring installHooks(
         JNIEnv *env,
         jobject /* this */) {
 
+    // read
+    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
+    // we will see some android read actions ;)
+
+    // open
+    __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
+    ChickenHook::Hooking::getInstance().hook((void *) &open, (void *) &my_open);
+    if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
+        __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
+    }
+
+/*
     // doIt
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "install hook");
     ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDoIt);
@@ -325,12 +353,6 @@ static jstring installHooks(
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR NULL !!");
     }
 
-    // open
-    __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
-    ChickenHook::Hooking::getInstance().hook((void *) &open, (void *) &my_open);
-    if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
-        __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
-    }
 
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "call fopen");
 
@@ -338,9 +360,8 @@ static jstring installHooks(
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR NULL !!");
     } // we should see open and fopen hook was triggered while calling fopen!
 
-    // read
-    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
-    // we will see some android read actions ;)
+
+
 
     // try to hook function our library doesn't link against...
     // SHA256_Final
@@ -355,7 +376,7 @@ static jstring installHooks(
     ChickenHook::Hooking::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
     //ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
 
-
+*/
     std::string hello = "Hello from C++";
     return env->NewStringUTF(hello.c_str());
 }
@@ -390,7 +411,7 @@ static int registerNativeMethods(JNIEnv *env, const char *className,
                                  JNINativeMethod *gMethods, int numMethods) {
     jclass clazz;
     clazz = env->FindClass(className);
-    if (clazz == NULL) {
+    if (clazz == nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "registerNativeMethods",
                             "Native registration unable to find class '%s'", className);
         return JNI_FALSE;
@@ -404,7 +425,7 @@ static int registerNativeMethods(JNIEnv *env, const char *className,
 }
 
 jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
-    JNIEnv *env = NULL;
+    JNIEnv *env = nullptr;
     if (vm->GetEnv((void **) (&env), JNI_VERSION_1_4) != JNI_OK) {
         return -1;
     }
@@ -412,9 +433,9 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     ChickenHook::Hooking::getInstance().setLoggingCallback(&logCallback);
 
     // hook register natives
-    registerNatives = dlsym(
+    registerNatives = (void *) env->functions->RegisterNatives;/*dlsym(
             RTLD_DEFAULT, // load other library with dlopen RTLD_NOW and set the handle here...
-            "_ZN7_JNIEnv15RegisterNativesEP7_jclassPK15JNINativeMethodi"); // you can also try to hook jniRegisterNativeMethods of libandroid_runtime.so
+            "_ZN7_JNIEnv15RegisterNativesEP7_jclassPK15JNINativeMethodi"); // you can also try to hook jniRegisterNativeMethods of libandroid_runtime.so*/
     if (registerNatives != nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "registerNatives ADDR %p",
                             registerNatives);
