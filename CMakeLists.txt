@@ -24,7 +24,7 @@ endif()
 ######## DOWNLOAD BEA
 
 # Download and unpack googletest at configure time
-configure_file(${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt)
+configure_file(${CMAKE_SOURCE_DIR}/beaengine-configure/CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/beaengine"
         )
