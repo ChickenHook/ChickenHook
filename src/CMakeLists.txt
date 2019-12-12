@@ -19,7 +19,8 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         hooking.cpp
         logging.cpp
-        trampoline.cpp)
+        trampoline.cpp
+        )
 
 target_include_directories(${PROJECT_NAME} INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/chickenHook>
@@ -29,12 +30,21 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 target_include_directories(${PROJECT_NAME} PUBLIC
         include/
         )
+target_include_directories(${PROJECT_NAME} PRIVATE
+        .
+        )
+target_include_directories(${PROJECT_NAME} PRIVATE
+        "${CMAKE_BINARY_DIR}/beaengine-src/include"
+        )
+
 
 #install(TARGETS ${PROJECT_NAME} DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/)
 
 
 install(TARGETS ${PROJECT_NAME}
         ARCHIVE
-            DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
-            COMPONENT Libraries)
+        DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
+        COMPONENT Libraries)
 install(DIRECTORY include/ DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/include)
+
+add_dependencies(${PROJECT_NAME} ${BEA_TARGET})

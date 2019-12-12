@@ -188,7 +188,6 @@ namespace ChickenHook {
         this->_hook_addr = hookFun;
         this->_trampoline_lock = new std::mutex();
         this->infoAvailable = dladdr(addr, &__info);
-        log("Constructor CALL!!");
     }
 
     /**
