@@ -18,6 +18,52 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
 endif()
 
+
+
+
+
+######## DOWNLOAD BEA
+
+# Download and unpack googletest at configure time
+configure_file(${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/beaengine"
+        )
+execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/beaengine"
+        )
+
+set(BEA_TARGET BeaEngine)
+# Add googletest directly to our build. This adds the following targets:
+# gtest, gtest_main, gmock and gmock_main
+add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src"
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-build"
+        )
+
+
+set(BEAENGINE_LIBRARIES ${CMAKE_BINARY_DIR}/beaengine/beaengine-src/src/libBeaEngine.a)
+set(BEAENGINE_INCLUDE_DIRS         "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes")
+
+include_directories(
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes"
+)
+
+add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src")
+
+
+# Now simply link your own targets against gtest, gmock,
+# etc. as appropriate
+
+#####################
+
+
+
+
+
+
+
 add_subdirectory(src)
 IF (ANDROID)
     add_subdirectory(androidTest)
@@ -28,3 +74,4 @@ elseif (MACOSX)
 elseif(WINDOWS)
     add_subdirectory(windowsTest)
 endif (ANDROID)
+
