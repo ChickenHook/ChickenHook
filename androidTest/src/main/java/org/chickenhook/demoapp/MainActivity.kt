@@ -1,10 +1,11 @@
-package com.self.vmcracker
+package org.chickenhook.demoapp
 
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.*
+import org.chickenhook.demoapp.R
 import java.io.File
 import java.security.MessageDigest
 

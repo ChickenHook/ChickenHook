@@ -1,8 +1,9 @@
-package com.self.vmcracker
+package org.chickenhook.demoapp
 
 import android.app.Activity
 import android.os.Bundle
 import android.webkit.WebView
+import org.chickenhook.demoapp.R
 
 class WebViewActivity : Activity() {
 
@@ -10,8 +11,8 @@ class WebViewActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
 
-        findViewById<WebView>(R.id.webview).let {
-            it.loadUrl("https://webtest.labnet.kobil.com/webview-test/kobilSpecialCommands.html")
+        findViewById<WebView>(R.id.chicken_web_view).let {
+            it.loadUrl("https://www.google.de")
         }
     }
 

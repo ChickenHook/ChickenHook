@@ -280,7 +280,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        //printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
 
         ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
                                                             size_t)) trampoline.getRealCallAddr();
@@ -357,7 +357,7 @@ static jstring installHooks(
         jobject /* this */) {
 
     // read
-    //ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
+    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
     // we will see some android read actions ;)
 
     // open
@@ -405,7 +405,7 @@ static jstring installHooks(
 
 
     // dl hooking
-    ChickenHook::Hooking::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
+    //ChickenHook::Hooking::getInstance().hook((void *) &dlsym, (void *) &my_dlsym);
     //ChickenHook::getInstance().hook((void *) &dlopen, (void *) &my_dlopen);
 
 
@@ -437,7 +437,7 @@ static jstring my_installHooks(
 static const JNINativeMethod gMethods[] = {
         {"installHooks", "()Ljava/lang/String;", (void *) installHooks},
 };
-static const char *classPathName = "com/self/vmcracker/MainActivity";
+static const char *classPathName = "org/chickenhook/demoapp/MainActivity";
 
 static int registerNativeMethods(JNIEnv *env, const char *className,
                                  JNINativeMethod *gMethods, int numMethods) {
@@ -471,8 +471,8 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     if (registerNatives != nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "registerNatives ADDR %p",
                             registerNatives);
-        ChickenHook::Hooking::getInstance().hook(registerNatives,
-                                                 (void *) &my_RegisterNatives);
+        /*ChickenHook::Hooking::getInstance().hook(registerNatives,
+                                                 (void *) &my_RegisterNatives);*/
     }
 
 

@@ -1,4 +1,4 @@
-package com.self.vmcracker
+package com.chickenhook.vmcracker
 
 import org.junit.Test
 
