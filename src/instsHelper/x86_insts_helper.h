@@ -23,14 +23,15 @@ namespace ChickenHook {
 
         while ((infos.Error == 0) && (offset < hookLen)) {
             len = Disasm(&infos);
-            if (infos.Instruction.BranchType == CallType) {
-                log("Call found... abort");
+            if (infos.Instruction.BranchType != 0) {
+                log("Branch found... abort");
                 return -1;
             }
+
             if (infos.Error != UNKNOWN_OPCODE) {
-                log("Instruciton %s", infos.CompleteInstr);
+                log("Instruciton %s : <%d>", infos.CompleteInstr, infos.Instruction.BranchType);
                 infos.EIP += len;
-                offset+=len;
+                offset += len;
                 i++;
             }
         }
