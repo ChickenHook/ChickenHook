@@ -2,11 +2,21 @@
 #pragma once
 
 #include <beaengine/BeaEngine.h>
-#include "../../beaengine/beaengine-src/src/Includes/BeaEngine.h"
-#include "../../../../../Android/Sdk/ndk/20.0.5594570/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/include/c++/v1/cstdint"
 
 
 namespace ChickenHook {
+
+    static void printInstruction(char *inst) {
+
+        DISASM infos;
+        int len, i = 0, offset = 0;
+
+        (void) memset(&infos, 0, sizeof(DISASM));
+
+        infos.EIP = (UIntPtr) inst;
+        log("printInstruction %s : <%d> : <%x> at <%p>", infos.CompleteInstr,
+            infos.Instruction.BranchType, offset, infos.EIP);
+    }
 
 /**
  *
@@ -39,16 +49,12 @@ namespace ChickenHook {
                     return offset + len;
                 }
                 if (infos.Instruction.BranchType == CallType) {
-                    uint64_t target_addr = 0;
-                    uint64_t call_addr = 0;
-                    uint32_t rel_addr = 0;
+                    int32_t rel_addr = 0;
 
                     switch (*((char *) (uint64_t) infos.EIP)) {
                         case '\xe8':
                             // calculate new addr
-                            target_addr = infos.EIP + infos.Instruction.AddrValue;
-                            call_addr = ((uint64_t) target) + offset;
-                            rel_addr = target_addr - call_addr - 5;
+                            rel_addr = (char *) infos.Instruction.AddrValue - (target + offset) - 5;
                             // inject into memory
                             memcpy((char *) infos.EIP + 1, &rel_addr, 4);
                             break;

@@ -135,8 +135,7 @@ namespace ChickenHook {
         int requiredTrampolinSize = nextInstOff(_original_addr, _trampoline.size(),
                                                 (char *) &_real_call_code[0]);
 
-        // insert jump to hooking function
-        memcpy(_original_addr, &_trampoline[0], _trampoline.size());
+
 
 
         if (requiredTrampolinSize == -1) {
@@ -154,7 +153,7 @@ namespace ChickenHook {
 
 
             // copy original code of trampoline size and add trampoline to jump back
-            memcpy(&_real_call_code[0], &_original_code[0], requiredTrampolinSize);
+            memcpy(&_real_call_code[0], _original_addr, requiredTrampolinSize);
             std::vector<uint8_t> backjump = generateJump(
                     (void *) &_real_call_code[requiredTrampolinSize],
                     (void *) (((char *) _original_addr + (requiredTrampolinSize))));
@@ -172,7 +171,8 @@ namespace ChickenHook {
             }
         }
 
-
+        // insert jump to hooking function
+        memcpy(_original_addr, &_trampoline[0], _trampoline.size());
 
 
         /*if (!updatePermissions(_original_addr, PROT_READ | PROT_EXEC)) {
