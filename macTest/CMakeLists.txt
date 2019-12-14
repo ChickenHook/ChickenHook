@@ -11,3 +11,7 @@ target_link_libraries(macTest
         ${PROJECT_NAME}
         dl
 )
+
+target_include_directories(macTest PRIVATE
+        ${BEAENGINE_INCLUDE_DIRS}
+        )

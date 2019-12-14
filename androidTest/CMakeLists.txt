@@ -46,4 +46,8 @@ target_link_libraries( # Specifies the target library.
         ${log-lib}
         ${BEAENGINE_LIBRARIES})
 
+target_include_directories(native-lib PRIVATE
+        ${BEAENGINE_INCLUDE_DIRS}
+        )
+
 add_dependencies(native-lib BeaEngine)
