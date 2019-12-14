@@ -280,7 +280,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        //printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
 
         ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
                                                             size_t)) trampoline.getRealCallAddr();
@@ -471,8 +471,8 @@ jint JNI_OnLoad(JavaVM *vm, void * /*reserved*/) {
     if (registerNatives != nullptr) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "registerNatives ADDR %p",
                             registerNatives);
-        /*ChickenHook::Hooking::getInstance().hook(registerNatives,
-                                                 (void *) &my_RegisterNatives);*/
+        ChickenHook::Hooking::getInstance().hook(registerNatives,
+                                                 (void *) &my_RegisterNatives);
     }
 
 
