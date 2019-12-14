@@ -10,6 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.chickenhook.demoapp.MainActivity
+import org.chickenhook.demoapp.R
 
 import org.junit.Test
 import org.junit.runner.RunWith
