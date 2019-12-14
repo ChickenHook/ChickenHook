@@ -39,6 +39,5 @@ class RegressionTest {
         onView(withId(R.id.test_button)).perform(click())
         SystemClock.sleep(1000)
         Espresso.pressBack();
-
     }
 }

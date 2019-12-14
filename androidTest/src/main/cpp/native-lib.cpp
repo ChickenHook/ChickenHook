@@ -273,29 +273,43 @@ void printLines(std::string content) {
 }
 
 ssize_t my_read(int __fd, void *__buf, size_t __count) {
-    __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "read called [-] %d", __fd);
+    __android_log_print(ANDROID_LOG_DEBUG, "my_read", "read called [-] %d", __fd);
 
+    // <== add your code before real call here
+
+    // yeah we're inside! But sometimes you want to call the original function also.
+    // For this purpose we try to retrieve the corresponding trampoline.
+    // So let's retrieve our trampoline in order to call the original function "read"
     int res = -1;
     ChickenHook::Trampoline trampoline;
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
+        __android_log_print(ANDROID_LOG_DEBUG, "my_read",
                             "hooked function call original function");
         printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
 
+        // retrieve the real read call address
         ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
                                                             size_t)) trampoline.getRealCallAddr();
+        // if read != nullptr we have a valid address and call it
+        // if read ==nullptr we have to copy the original code of read.
         if (_read == nullptr) {
+            // !! WARNING !! This is a very risky workaround.
+            // * Race condition can lead to crashes
+            // * Multithreading and semaphores in target function or it's callee's can lead to deadlocks
             trampoline.copyOriginal();
             res = read(__fd, __buf, __count);
             trampoline.reinstall();
         } else {
+            // Very save method. Available for most of all functions
             res = _read(__fd, __buf, __count);
         }
-        return res;
     } else {
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
+        __android_log_print(ANDROID_LOG_DEBUG, "my_read",
                             "hooked function cannot call original function");
     }
+
+    // <== manipulate results here
+
     return res;
 }
 
