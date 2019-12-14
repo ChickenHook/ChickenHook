@@ -5,12 +5,13 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-add_executable (macTest main.cpp)
+add_executable(macTest main.cpp)
 
 target_link_libraries(macTest
         ${PROJECT_NAME}
         dl
-)
+        ${BEAENGINE_LIBRARIES}
+        )
 
 target_include_directories(macTest PRIVATE
         ${BEAENGINE_INCLUDE_DIRS}
