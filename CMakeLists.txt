@@ -16,10 +16,7 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(LINUX TRUE)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
-endif()
-
-
-
+endif ()
 
 
 ######## DOWNLOAD && CONFIGURE BEA
@@ -47,22 +44,23 @@ add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src"
 
 
 set(BEAENGINE_LIBRARIES ${CMAKE_BINARY_DIR}/beaengine/beaengine-src/src/libBeaEngine.a)
-set(BEAENGINE_INCLUDE_DIRS         "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
+set(BEAENGINE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
         "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes")
 
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src")
+
+install(TARGETS ${BEA_TARGET}
+        ARCHIVE
+        DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
+        COMPONENT Libraries)
+install(DIRECTORY ${BEAENGINE_INCLUDE_DIRS} DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/include)
 
 
 # Now simply link your own targets against gtest, gmock,
 # etc. as appropriate
 
 #####################
-
-
-
-
-
 
 
 add_subdirectory(src)
@@ -72,7 +70,7 @@ elseif (LINUX)
     add_subdirectory(linuxTest)
 elseif (MACOSX)
     add_subdirectory(macTest)
-elseif(WINDOWS)
+elseif (WINDOWS)
     add_subdirectory(windowsTest)
 endif (ANDROID)
 
