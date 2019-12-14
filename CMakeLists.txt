@@ -49,12 +49,6 @@ set(BEAENGINE_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src")
 
-install(TARGETS ${BEA_TARGET}
-        ARCHIVE
-        DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
-        COMPONENT Libraries)
-install(DIRECTORY ${BEAENGINE_INCLUDE_DIRS} DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/include)
-
 
 # Now simply link your own targets against gtest, gmock,
 # etc. as appropriate
@@ -72,4 +66,3 @@ elseif (MACOSX)
 elseif (WINDOWS)
     add_subdirectory(windowsTest)
 endif (ANDROID)
-
