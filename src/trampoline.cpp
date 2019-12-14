@@ -5,7 +5,9 @@
 #include "chickenHook/trampoline.h"
 // Instructions helper
 #ifdef __aarch64__
+
 #include "instsHelper/arm64_insts_helper.h" // arm64?
+
 #elif __i386__
 
 #include "instsHelper/x86_insts_helper.h"
@@ -50,17 +52,17 @@ namespace ChickenHook {
         // aarch64
         jump.resize(TRAMPOLINE_SIZE);
         //const char * jumpInst="\x49\x00\x00\x58\x20\x01\x1f\xd6";
-        jump[0]=0x49;
-        jump[1]=0x00;
-        jump[2]=0x00;
-        jump[3]=0x58;
-        jump[4]=0x20;
-        jump[5]=0x01;
-        jump[6]=0x1f;
-        jump[7]=0xd6;
+        jump[0] = 0x49;
+        jump[1] = 0x00;
+        jump[2] = 0x00;
+        jump[3] = 0x58;
+        jump[4] = 0x20;
+        jump[5] = 0x01;
+        jump[6] = 0x1f;
+        jump[7] = 0xd6;
 
-        int insOff = TRAMPOLINE_SIZE;
-        uint64_t absoluteAddr=(uint64_t) dest;
+        //int insOff = TRAMPOLINE_SIZE;
+        uint64_t absoluteAddr = (uint64_t) dest;
 
         log("Calculate relative jump addr <%d> - src <%p> dest <%p>", absoluteAddr, src,
             dest);
@@ -68,19 +70,34 @@ namespace ChickenHook {
         memcpy(&jump[8], &absoluteAddr, 8);
 #elif __x86_64__
         // x86_64
-        jump.resize(TRAMPOLINE_SIZE);
-        jump[0] = 0xFF; // indirect jump
-        jump[1] = 0x25;
-        jump[2] = 0x00;
-        jump[3] = 0x00;
-        jump[4] = 0x00;
-        jump[5] = 0x00;
         int insOff = TRAMPOLINE_SIZE;
-        uint64_t relativeAddr = (uint64_t) dest; //((uint64_t) dest - (uint64_t) src - insOff); // - insOff
-        log("Calculate relative jump addr <%p> - src <%p> dest <%p>", (uint64_t) relativeAddr, src,
-            dest);
 
-        memcpy(&jump[6], &relativeAddr, TRAMPOLINE_SIZE - 6);
+        int diff=((uint64_t) dest - (uint64_t) src - insOff);
+        if(diff > 0x7fffffff || diff < 0x7fffffff){
+            jump.resize(TRAMPOLINE_SIZE);
+            jump[0] = 0xFF; // indirect jump
+            jump[1] = 0x25;
+            jump[2] = 0x00;
+            jump[3] = 0x00;
+            jump[4] = 0x00;
+            jump[5] = 0x00;
+            uint64_t relativeAddr = (uint64_t) dest; //((uint64_t) dest - (uint64_t) src - insOff); // - insOff
+            log("Calculate relative jump addr <%p> - src <%p> dest <%p>", (uint64_t) relativeAddr, src,
+                dest);
+
+            memcpy(&jump[6], &relativeAddr, TRAMPOLINE_SIZE - 6);
+        } else {
+            jump.resize(5);
+            jump[0] = 0xE9; // indirect jump
+            int insOff = 0x5;
+            uint32_t relativeAddr = (uint32_t)((uint64_t) dest - (uint64_t) src - insOff);
+            log("Calculate relative jump addr <%d> - src <%p> dest <%p>", (int32_t) relativeAddr, src,
+                dest);
+
+            memcpy(&jump[1], &relativeAddr, 4);
+        }
+
+
 #else
 #error "UNSUPPORTED"
 #endif
@@ -106,8 +123,22 @@ namespace ChickenHook {
         _original_code.resize(CODE_SIZE);
         memcpy(&_original_code[0], _original_addr, CODE_SIZE);
 
+
+        // create real call code
+        _real_call_code.resize(CODE_SIZE); // alloc enough space ;)
+
+        // generate jump in order to determine minimum trampoline size
+        _trampoline = generateJump(_original_addr, _hook_addr);
+
+
         // check function compatibility and required trampoline size (to not destroy greater instructions)
-        int requiredTrampolinSize = nextInstOff(_original_addr, TRAMPOLINE_SIZE);
+        int requiredTrampolinSize = nextInstOff(_original_addr, _trampoline.size(),
+                                                (char *) &_real_call_code[0]);
+
+        // insert jump to hooking function
+        memcpy(_original_addr, &_trampoline[0], _trampoline.size());
+
+
         if (requiredTrampolinSize == -1) {
             /**
              * Without landing pad, we have to copy the original code, execute it and install hook again.
@@ -121,16 +152,13 @@ namespace ChickenHook {
              */
             log("Required trampoline size <%d>", requiredTrampolinSize);
 
-            // create real call code
-            _real_call_code.resize(
-                    requiredTrampolinSize + TRAMPOLINE_SIZE); // 2* TR size + opcode fix
 
             // copy original code of trampoline size and add trampoline to jump back
             memcpy(&_real_call_code[0], &_original_code[0], requiredTrampolinSize);
             std::vector<uint8_t> backjump = generateJump(
                     (void *) &_real_call_code[requiredTrampolinSize],
                     (void *) (((char *) _original_addr + (requiredTrampolinSize))));
-            memcpy(&_real_call_code[requiredTrampolinSize], &backjump[0], TRAMPOLINE_SIZE);
+            memcpy(&_real_call_code[requiredTrampolinSize], &backjump[0], backjump.size());
 
             // make real call code executable
             if (!updatePermissions(&_real_call_code[0], PROT_READ | PROT_WRITE | PROT_EXEC)) {
@@ -145,9 +173,7 @@ namespace ChickenHook {
         }
 
 
-        // insert jump to hooking function
-        _trampoline = generateJump(_original_addr, _hook_addr);
-        memcpy(_original_addr, &_trampoline[0], TRAMPOLINE_SIZE);
+
 
         /*if (!updatePermissions(_original_addr, PROT_READ | PROT_EXEC)) {
             if (doLock) unlock();

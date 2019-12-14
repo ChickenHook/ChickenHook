@@ -280,7 +280,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+        //printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
 
         ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
                                                             size_t)) trampoline.getRealCallAddr();
@@ -373,10 +373,10 @@ static jstring installHooks(
 
     // doIt
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "install hook");
-    ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDoIt);
+    //ChickenHook::Hooking::getInstance().hook((void *) &doIt, (void *) &myDoIt);
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook installed");
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "call function");
-    doIt();
+    //doIt();
 
     // fopen
     __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook fopen");
