@@ -21,7 +21,7 @@ endif()
 
 
 
-######## DOWNLOAD BEA
+######## DOWNLOAD && CONFIGURE BEA
 
 # Download and unpack googletest at configure time
 configure_file(${CMAKE_SOURCE_DIR}/beaengine-configure/CMakeLists.txt.in ${CMAKE_SOURCE_DIR}/beaengine/CMakeLists.txt)
@@ -31,6 +31,11 @@ execute_process(COMMAND "${CMAKE_COMMAND}" -G "Unix Makefiles" .
 execute_process(COMMAND "${CMAKE_COMMAND}" --build .
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/beaengine"
         )
+
+include_directories(
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
+        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes"
+)
 
 set(BEA_TARGET BeaEngine)
 # Add googletest directly to our build. This adds the following targets:
@@ -44,10 +49,6 @@ set(BEAENGINE_LIBRARIES ${CMAKE_BINARY_DIR}/beaengine/beaengine-src/src/libBeaEn
 set(BEAENGINE_INCLUDE_DIRS         "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
         "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes")
 
-include_directories(
-        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/include"
-        "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src/Includes"
-)
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/beaengine/beaengine-src/src")
 
