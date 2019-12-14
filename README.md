@@ -45,7 +45,7 @@ Check this video (Please enable subtitles):
 
 Check this video (Please enable subtitles):
 
-[![](doc/res/skypeAttack.gif)](http://www.youtube.com/watch?v=kbrenIx8OrI "How to hack Skype on Linux")
+[![](docs/res/skypeAttack.gif)](http://www.youtube.com/watch?v=kbrenIx8OrI "How to hack Skype on Linux")
 
 http://img.youtube.com/vi/kbrenIx8OrI/0.jpg
 
