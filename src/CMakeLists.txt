@@ -43,7 +43,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 
 install(TARGETS ${PROJECT_NAME}
         ARCHIVE
-        DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/lib/
+        DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/lib/
         COMPONENT Libraries)
 install(DIRECTORY include/ DESTINATION ${CMAKE_SOURCE_DIR}/artifactsOut/${CMAKE_LIBRARY_ARCHITECTURE}/include)
 
