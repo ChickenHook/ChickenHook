@@ -4,11 +4,14 @@
 #include <dlfcn.h>
 #include <vector>
 #include "chickenHook/hooking.h"
-#include <fcntl.h>
 #include <iomanip>
 #include <sstream>
 #include <algorithm>
 #include <unistd.h>
+#include <fstream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define  SHA256_DIGEST_LENGTH 32
 
@@ -71,7 +74,8 @@ FILE *my_fopen(const char *__path, const char *__mode) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &fopen, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
                             "hooked function call original function");
-        auto _fopen = (FILE *(*)(const char *__path, const char *__mode)) trampoline.getRealCallAddr();
+        auto _fopen = (FILE *(*)(const char *__path,
+                                 const char *__mode)) trampoline.getRealCallAddr();
         if (_fopen == nullptr) {
             trampoline.copyOriginal();
             f = fopen(__path, __mode);
@@ -88,9 +92,9 @@ FILE *my_fopen(const char *__path, const char *__mode) {
     return NULL;
 }
 
+/*
 int my_open(const char *__path, int __flags, ...) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "open called [-] %s", __path);
-
     int res = -1;
     ChickenHook::Trampoline trampoline;
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &open, trampoline)) {
@@ -112,7 +116,7 @@ int my_open(const char *__path, int __flags, ...) {
                             "hooked function cannot call original function");
     }
     return -1;
-}
+}*/
 
 int my_SHA256_Final(unsigned char *md, void *c) {
     __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "sha256 called [-] <%p>", md);
@@ -285,7 +289,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
     if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
         __android_log_print(ANDROID_LOG_DEBUG, "my_read",
                             "hooked function call original function");
-        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+        //printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
 
         // retrieve the real read call address
         ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
@@ -316,6 +320,7 @@ ssize_t my_read(int __fd, void *__buf, size_t __count) {
 static jstring my_installHooks(
         JNIEnv *env,
         jobject thiz);
+
 
 // register natives hook
 jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *methods,
@@ -348,10 +353,10 @@ jint my_RegisterNatives(JNIEnv *env, jclass clazz, const JNINativeMethod *method
             fun = (jint (*)(JNIEnv *, jclass, const JNINativeMethod *, jint)) registerNatives;
             trampoline.copyOriginal();
             res = fun(env, clazz, newMethods, size);
-            trampoline.reinstall();
+            //trampoline.reinstall(); // doN't reinstall the hook! we're done
         } else {
             res = fun(env, clazz, newMethods, size);
-
+            trampoline.copyOriginal(); // copy back the original function! we're done..
         }
         return res;
     } else {
@@ -371,18 +376,18 @@ static jstring installHooks(
         jobject /* this */) {
 
     // read
-    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
+    //ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
     // we will see some android read actions ;)
 
     // open
-    __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
+    /*__android_log_print(ANDROID_LOG_DEBUG, "installHooks", "hook open");
     if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!!!! FILE DESCRIPTOR <=0 !!!!");
     }
     ChickenHook::Hooking::getInstance().hook((void *) &open, (void *) &my_open);
     if (open("/proc/self/maps", O_RDONLY | O_CLOEXEC) <= 0) {
         __android_log_print(ANDROID_LOG_DEBUG, "installHooks", "!! FILE DESCRIPTOR <=0 !!");
-    }
+    }*/
 
 
     // doIt
