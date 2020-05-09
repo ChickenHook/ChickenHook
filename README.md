@@ -151,4 +151,36 @@ artifacts will be in ./artifactsOut
 
 ## Include in your Project
 
-WIP
+1. Fetch artifacts via ANT
+
+```ant
+    <target name="artifacts">
+        <mkdir dir="artifacts"/>
+        <get src="https://dev.azure.com/ChickenHook/ChickenHook/_apis/build/builds/101/artifacts?artifactName=ChickenHook&amp;api-version=5.1&amp;%24format=zip" dest="artifacts/ChickenHook.zip"/>
+        <unzip src="artifacts/ChickenHook.zip" dest="artifacts/"/>
+
+        <get src="https://dev.azure.com/ChickenHook/ChickenHook/_apis/build/builds/99/artifacts?artifactName=BeaEngine&amp;api-version=5.1&amp;%24format=zip" dest="artifacts/BeaEngine.zip"/>
+        <unzip src="artifacts/BeaEngine.zip" dest="artifacts/"/>
+    </target>
+```
+
+2. Include into your CMake project
+Includes
+
+```cmake
+target_include_directories(${PROJECT_NAME} PUBLIC
+        ${CMAKE_SOURCE_DIR}/artifacts/ChickenHook/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/include/
+        ${CMAKE_SOURCE_DIR}/artifacts/BeaEngine/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/include/
+        )
+```
+
+Static libraries
+```cmake
+target_link_libraries(${PROJECT_NAME}
+        # add chickenhook here
+        ${CMAKE_SOURCE_DIR}/artifacts/ChickenHook/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/lib/libChickenHook.a
+        ${CMAKE_SOURCE_DIR}/artifacts/BeaEngine/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/lib/libBeaEngine_s_d_l.a
+        log
+        dl
+        )
+```
