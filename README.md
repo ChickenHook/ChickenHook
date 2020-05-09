@@ -24,6 +24,40 @@ ChickenHook is a multi architecture hooking framework.
 Supported architectures: x86, arm64, x86_64 (experimental)
 Supported platforms: Android, Linux
 
+### Example usage
+
+#### Linux
+
+Hack some applications using ChickenHook + StaticInjector (Linux Wrapper)
+
+See more at: [StaticInjector](https://github.com/ChickenHook/StaticInjector)
+
+Here are some examples hacks using StaticInjector
+
+##### Firefox
+
+Check this video (Please enable subtitles):
+
+[![](http://img.youtube.com/vi/_4K2d7FFHqo/0.jpg)](http://www.youtube.com/watch?v=_4K2d7FFHqo "Linux attack Firefox")
+
+##### Skype
+
+
+Check this video (Please enable subtitles):
+
+[![](docs/res/skypeAttack.gif)](http://www.youtube.com/watch?v=kbrenIx8OrI "How to hack Skype on Linux")
+
+http://img.youtube.com/vi/kbrenIx8OrI/0.jpg
+
+Read more in our wiki:
+[How to create a linux attack (skype example)](https://github.com/ChickenHook/StaticInjector/wiki/How-to-create-a-linux-attack-(step-by-step-guide) "How to create a linux attack (step by step guide)")
+
+#### Android
+
+##### Hook AndroidRuntime (ART)
+
+See more at: [ChickenTime](https://github.com/ChickenHook/AndroidChickenTime)
+
 ## Requirements
 
 * ant
@@ -44,37 +78,52 @@ Supported platforms: Android, Linux
 example here shows a hook function for libc's open
 
 ```c
-    int my_open(const char *__path, int __flags, ...) {
-        // this my_open will be called instead of doIt
+ssize_t my_read(int __fd, void *__buf, size_t __count) {
+    __android_log_print(ANDROID_LOG_DEBUG, "my_read", "read called [-] %d", __fd);
 
-        __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI", "open called [-] %s", __path);
-        // yeah we're inside! But sometimes you want to call the original function also.
-        // For this purpose we try to retrieve the corresponding trampoline.
-        int res = -1;
-        Trampoline trampoline;
-        if (chickenHook.getTrampolineByAddr((void *) &open, trampoline)) {
-            __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
+    // <== add your code before real call here
+
+    // yeah we're inside! But sometimes you want to call the original function also.
+    // For this purpose we try to retrieve the corresponding trampoline.
+    // So let's retrieve our trampoline in order to call the original function "read"
+    int res = -1;
+    ChickenHook::Trampoline trampoline;
+    if (ChickenHook::Hooking::getInstance().getTrampolineByAddr((void *) &read, trampoline)) {
+        __android_log_print(ANDROID_LOG_DEBUG, "my_read",
                             "hooked function call original function");
-            // Now we copy the original function code into the original function
+        printLines(hexdump(static_cast<const uint8_t *>(__buf), __count, "read"));
+
+        // retrieve the real read call address
+        ssize_t (*_read)(int, void *, size_t) =(ssize_t (*)(int, void *,
+                                                            size_t)) trampoline.getRealCallAddr();
+        // if read != nullptr we have a valid address and call it
+        // if read ==nullptr we have to copy the original code of read.
+        if (_read == nullptr) {
+            // !! WARNING !! This is a very risky workaround.
+            // * Race condition can lead to crashes
+            // * Multithreading and semaphores in target function or it's callee's can lead to deadlocks
             trampoline.copyOriginal();
-            // We call the function
-            res = open(__path, __flags);
-            // afterwards we install our trampoline again
-            trampolinecode;
-            // that's it!
-            return res;
+            res = read(__fd, __buf, __count);
+            trampoline.reinstall();
         } else {
-            __android_log_print(ANDROID_LOG_DEBUG, "stringFromJNI",
-                            "hooked function cannot call original function");
+            // Very save method. Available for most of all functions
+            res = _read(__fd, __buf, __count);
         }
-        return -1;
+    } else {
+        __android_log_print(ANDROID_LOG_DEBUG, "my_read",
+                            "hooked function cannot call original function");
     }
+
+    // <== manipulate results here
+
+    return res;
+}
 ```
 
 2. Inject the trampoline  (enable the hook)
 
 ```c
-    ChickenHook::getInstance().hook((void *) &open, (void *) &my_open);
+    ChickenHook::Hooking::getInstance().hook((void *) &read, (void *) &my_read);
 ```
 
 
@@ -102,4 +151,36 @@ artifacts will be in ./artifactsOut
 
 ## Include in your Project
 
-WIP
+1. Fetch artifacts via ANT
+
+```ant
+    <target name="artifacts">
+        <mkdir dir="artifacts"/>
+        <get src="https://dev.azure.com/ChickenHook/ChickenHook/_apis/build/builds/101/artifacts?artifactName=ChickenHook&amp;api-version=5.1&amp;%24format=zip" dest="artifacts/ChickenHook.zip"/>
+        <unzip src="artifacts/ChickenHook.zip" dest="artifacts/"/>
+
+        <get src="https://dev.azure.com/ChickenHook/ChickenHook/_apis/build/builds/99/artifacts?artifactName=BeaEngine&amp;api-version=5.1&amp;%24format=zip" dest="artifacts/BeaEngine.zip"/>
+        <unzip src="artifacts/BeaEngine.zip" dest="artifacts/"/>
+    </target>
+```
+
+2. Include into your CMake project
+Includes
+
+```cmake
+target_include_directories(${PROJECT_NAME} PUBLIC
+        ${CMAKE_SOURCE_DIR}/artifacts/ChickenHook/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/include/
+        ${CMAKE_SOURCE_DIR}/artifacts/BeaEngine/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/include/
+        )
+```
+
+Static libraries
+```cmake
+target_link_libraries(${PROJECT_NAME}
+        # add chickenhook here
+        ${CMAKE_SOURCE_DIR}/artifacts/ChickenHook/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/lib/libChickenHook.a
+        ${CMAKE_SOURCE_DIR}/artifacts/BeaEngine/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}/lib/libBeaEngine_s_d_l.a
+        log
+        dl
+        )
+```

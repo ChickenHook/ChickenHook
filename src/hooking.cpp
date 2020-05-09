@@ -30,7 +30,7 @@ namespace ChickenHook {
         log("Inject trampoline into <%p> with hookfun <%p>", addr, callback);
         Trampoline trampoline(addr, callback);
         trampoline.install();
-        trampolines.push_back(trampoline);
+        trampolines.push_back(std::move(trampoline));
         return true;
     }
 
@@ -54,7 +54,8 @@ namespace ChickenHook {
 
         // search the corresponding trampoline
         for (auto trampoline : trampolines) {
-            if (trampoline.getOriginal() == si->si_addr) {
+            if (si->si_addr >= trampoline.getOriginal() &&
+                si->si_addr <= ((uint8_t *) trampoline.getOriginal()) + CODE_SIZE) {
                 log("Found hook <%p>", si->si_addr);
                 void *hook = trampoline.getHook();
                 auto hookFun = (void (*)()) hook;
@@ -95,16 +96,16 @@ namespace ChickenHook {
         sa.sa_sigaction = trampoline_receiver;
         sa.sa_flags = SA_SIGINFO;
 
-        sigaction(SIGILL, &sa, NULL);
-        sigaction(SIGSEGV, &sa, NULL);
+        sigaction(SIGILL, &sa, nullptr);
+        sigaction(SIGSEGV, &sa, nullptr);
     }
 
     /**
-     * Initiates chicken hook
+     * Initialize chicken hook
      */
     bool Hooking::init() {
-        installHandler();
-        return false;
+        //installHandler();
+        return true;
     }
 
     /**

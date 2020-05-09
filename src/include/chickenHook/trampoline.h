@@ -14,12 +14,24 @@
 
 namespace ChickenHook {
 
+    // CODE_SIZE
 #ifdef __aarch64__
 #define CODE_SIZE 64
 #elif __i386__
 #define CODE_SIZE 128
 #elif __x86_64__
-#define CODE_SIZE 128
+#define CODE_SIZE 64
+#else
+#error "UNSUPPORTED"
+#endif
+
+    // TRAMPOLINE SIZE
+#ifdef __aarch64__
+#define TRAMPOLINE_SIZE 16
+#elif __i386__
+#define TRAMPOLINE_SIZE 5
+#elif __x86_64__
+#define TRAMPOLINE_SIZE 14
 #else
 #error "UNSUPPORTED"
 #endif
@@ -70,6 +82,11 @@ namespace ChickenHook {
         void *getOriginal();
 
         /**
+         * @return the address for doing a real function call
+         */
+        void *getRealCallAddr();
+
+        /**
          * Locks the trampoline.
          * Other requests to copy or reinstall the trampoline must wait till trampoline is unlocked.
          */
@@ -89,7 +106,10 @@ namespace ChickenHook {
     private:
         void *_original_addr;
         void *_hook_addr;
+        void * _real_call_addr;
+        std::vector<uint8_t> _trampoline;
         std::vector<uint8_t> _original_code;
+        std::vector<uint8_t> _real_call_code;
         std::mutex *_trampoline_lock{};
         Dl_info __info;
         int infoAvailable = 0;

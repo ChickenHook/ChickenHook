@@ -19,6 +19,7 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         src/main/cpp/native-lib.cpp)
 
+
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
 # default, you only need to specify the name of the public NDK library
@@ -36,10 +37,17 @@ find_library( # Sets the name of the path variable.
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
+
 target_link_libraries( # Specifies the target library.
         native-lib
         ${PROJECT_NAME}
-
         # Links the target library to the log library
         # included in the NDK.
-        ${log-lib})
+        ${log-lib}
+        ${BEAENGINE_LIBRARIES})
+
+target_include_directories(native-lib PRIVATE
+        ${BEAENGINE_INCLUDE_DIRS}
+        )
+
+add_dependencies(native-lib BeaEngine)

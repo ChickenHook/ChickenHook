@@ -1,0 +1,15 @@
+cmake_minimum_required(VERSION 2.8.2)
+project(beaengine-download NONE)
+
+include(ExternalProject)
+ExternalProject_Add(beaengine
+    GIT_REPOSITORY https://github.com/BeaEngine/beaengine.git
+    GIT_TAG master
+    SOURCE_DIR "${CMAKE_SOURCE_DIR}/beaengine/beaengine-src"
+    BINARY_DIR "${CMAKE_SOURCE_DIR}/beaengine/beaengine-build"
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    TEST_COMMAND ""
+)
+

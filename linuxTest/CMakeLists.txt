@@ -10,4 +10,9 @@ add_executable (linuxTest main.cpp)
 target_link_libraries(linuxTest
         ${PROJECT_NAME}
         dl
+        ${BEAENGINE_LIBRARIES}
 )
+
+target_include_directories(linuxTest PRIVATE
+        ${BEAENGINE_INCLUDE_DIRS}
+        )
