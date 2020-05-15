@@ -184,3 +184,13 @@ target_link_libraries(${PROJECT_NAME}
         dl
         )
 ```
+
+## Other Projects
+
+| Project | Description |
+|---------|-------------|
+| [ChickenHook](https://github.com/ChickenHook/ChickenHook) | A linux / android / MacOS hooking framework  |
+| [BinderHook](https://github.com/ChickenHook/BinderHook) | Library intended to hook Binder interface and manipulate events |
+| [RestrictionBypass](https://github.com/ChickenHook/RestrictionBypass) |  Android API restriction bypass for all Android Versions |
+| [AndroidManifestBypass](https://github.com/ChickenHook/AndroidManifestBypass) |  Android API restriction bypass for all Android Versions |
+| .. | |
