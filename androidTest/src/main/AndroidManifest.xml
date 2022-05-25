@@ -12,6 +12,8 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service android:name="org.chickenhook.demoapp.RemoteService"
+            android:process=":secondProcess"/>
         <activity
             android:name="org.chickenhook.demoapp.WebViewActivity"
             android:label="@string/title_activity_web_view"
