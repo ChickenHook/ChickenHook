@@ -45,14 +45,16 @@ class RemoteService : Service() {
         }
     }
 
+
     /**
      * When binding to the service, we return an interface to our messenger
      * for sending messages to the service.
      */
-    override fun onBind(intent: Intent): IBinder? {
-        Toast.makeText(applicationContext, "binding", Toast.LENGTH_SHORT).show()
-        mMessenger = Messenger(IncomingHandler(this))
-        return mMessenger.binder
+    override fun onBind(intent: Intent): IBinder {
+//        Toast.makeText(applicationContext, "binding", Toast.LENGTH_SHORT).show()
+//        mMessenger = Messenger(IncomingHandler(this))
+//        return mMessenger.binder
+        return MyBinder()
     }
 
 }

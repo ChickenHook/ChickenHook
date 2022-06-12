@@ -42,4 +42,10 @@
         android:inputType="textPersonName"
         android:text="Name" />
 
+    <Button
+        android:id="@+id/clipboard_crash"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ClipboardCrash" />
+
 </LinearLayout>

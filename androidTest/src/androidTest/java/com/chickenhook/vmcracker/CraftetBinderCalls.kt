@@ -16,8 +16,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import android.R.attr.data
+import android.content.Context
 import android.util.Log
+import android.view.WindowManager
 import androidx.test.espresso.action.ViewActions
+import androidx.test.platform.app.InstrumentationRegistry
 import java.nio.ByteBuffer
 import java.nio.IntBuffer
 
@@ -74,5 +77,11 @@ class CraftetBinderCalls {
         SystemClock.sleep(2000)
 
     }
+    @Test
+    fun crashWindowSession() {
 
+        onView(withId(R.id.clipboard_crash)).perform(ViewActions.click())
+        SystemClock.sleep(2000)
+
+    }
 }

